@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drama Watchlist Tracker (Pro)</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body style="margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif;">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- 1. DIRECT DATA STORAGE ---
+        const PRELOADED_DATABASE = [
+          {
+            name: "My Lovely Liar",
+            country: "Korean Drama",
+            genre: "Romance, Mystery, Supernatural",
+            image: "https://upload.wikimedia.org/wikipedia/en/2/23/My_Lovely_Liar_poster.jpg",
+            credit: "tvN, Viu",
+            episodes: "16",
+            characters: "Mok Sol-hee & Kim Do-ha",
+            synopsis: "A woman who can hear lies loses faith in humanity, until she crosses paths with an innocent murder suspect who nobody believes."
+          },
+          {
+            name: "Hidden Love",
+            country: "Chinese Drama",
+            genre: "Romance, Youth, School",
+            image: "https://images.unsplash.com/photo-1518173946687-a4c8a3b1f98e?w=600",
+            credit: "Youku, Pinterest",
+            episodes: "25",
+            characters: "Sang Zhi & Duan Jiaxu",
+            synopsis: "During high school, Sang Zhi frequently needs her parents to meet her teacher. She turns to her older brother's roommate, Duan Jiaxu, for help, blooming into a lifelong affection."
+          },
+          {
+            name: "Business Proposal",
+            country: "Korean Drama",
+            genre: "Romance, Comedy, Office",
+            image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600",
+            credit: "SBS, Netflix",
+            episodes: "12",
+            characters: "Shin Ha-ri & Kang Tae-moo",
+            synopsis: "Shin Ha-ri disguises herself to take her rich friend's place on a blind date to scare the suitor away, only to discover he is actually her company's hyper-efficient CEO."
+          },
+          {
+            name: "Crash Landing on You",
+            country: "Korean Drama",
+            genre: "Romance, Comedy, Melodrama",
+            image: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=600",
+            credit: "tvN, Netflix",
+            episodes: "16",
+            characters: "Yoon Se-ri & Ri Jeong-hyeok",
+            synopsis: "A South Korean chaebol heiress accidentally paraglides into North Korea during a sudden storm and gets rescued by a high-ranking North Korean military officer."
+          }
+        ];
+
+        // --- 2. MAIN APPLICATION DASHBOARD MODULE ---
+        function App() {
+          const [watchlist, setWatchlist] = React.useState(() => {
+            const saved = localStorage.getItem('my_drama_watchlist');
+            return saved ? JSON.parse(saved) : [];
+          });
+
+          // Form States
+          const [titleInput, setTitleInput] = React.useState('');
+          const [myRating, setMyRating] = React.useState('10 / 10 Stars');
+          const [status, setStatus] = React.useState('Completed');
+          const [imageUrlInput, setImageUrlInput] = React.useState('');
+          const [isCustom, setIsCustom] = React.useState(false);
+          
+          const [customFields, setCustomFields] = React.useState({
+            country: '', genre: '', episodes: '', characters: '', synopsis: ''
+          });
+
+          // UI States
+          const [darkMode, setDarkMode] = React.useState(false);
+          const [suggestions, setSuggestions] = React.useState([]);
+          const [editingId, setEditingId] = React.useState(null);
+
+          // Filtering & Searching States
+          const [filterStatus, setFilterStatus] = React.useState('All');
+          const [searchQuery, setSearchQuery] = React.useState('');
+
+          React.useEffect(() => {
+            localStorage.setItem('my_drama_watchlist', JSON.stringify(watchlist));
+          }, [watchlist]);
+
+          const cleanText = (str) => {
+            if (!str) return '';
+            return str.toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+          };
+
+          const handleInputChange = (e) => {
+            const value = e.target.value;
+            setTitleInput(value);
+
+            if (!value.trim()) {
+              setSuggestions([]);
+              setIsCustom(false);
+              setImageUrlInput('');
+              return;
+            }
+
+            const searchVal = cleanText(value);
+            const matches = PRELOADED_DATABASE.filter(item => 
+              cleanText(item.name).includes(searchVal)
+            ).slice(0, 5);
+            
+            setSuggestions(matches);
+            setIsCustom(matches.length === 0);
+          };
+
+          const handleSelectSuggestion = (drama) => {
+            setTitleInput(drama.name);
+            setImageUrlInput(drama.image); // Auto-fills preloaded image URL
+            setSuggestions([]);
+            setIsCustom(false);
+          };
+
+          const handleAddDrama = (e) => {
+            e.preventDefault();
+            if (!titleInput.trim()) return;
+
+            const userTypedTitle = cleanText(titleInput);
+            const matchingDrama = PRELOADED_DATABASE.find(item => cleanText(item.name) === userTypedTitle);
+
+            if (matchingDrama && !isCustom) {
+              const newEntry = {
+                ...matchingDrama,
+                image: imageUrlInput || matchingDrama.image, // Uses manual override if provided
+                userRating: myRating,
+                userStatus: status,
+                id: Date.now()
+              };
+              setWatchlist([newEntry, ...watchlist]);
+            } else {
+              const fallbackEntry = {
+                name: titleInput,
+                country: customFields.country || 'Custom Entry',
+                genre: customFields.genre || 'Manual Entry',
+                image: imageUrlInput || 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=600',
+                credit: 'User Upload',
+                episodes: customFields.episodes || 'N/A',
+                characters: customFields.characters || 'N/A',
+                synopsis: customFields.synopsis || 'Manually logged title entry.',
+                userRating: myRating,
+                userStatus: status,
+                id: Date.now()
+              };
+              setWatchlist([fallbackEntry, ...watchlist]);
+            }
+
+            // Reset Fields
+            setTitleInput('');
+            setImageUrlInput('');
+            setSuggestions([]);
+            setIsCustom(false);
+            setCustomFields({ country: '', genre: '', episodes: '', characters: '', synopsis: '' });
+          };
+
+          const handleDeleteCard = (idToDelete) => {
+            setWatchlist(watchlist.filter(item => item.id !== idToDelete));
+          };
+
+          const handleUpdateCardField = (id, field, value) => {
+            setWatchlist(watchlist.map(item => {
+              if (item.id === id) {
+                return { ...item, [field]: value };
+              }
+              return item;
+            }));
+          };
+
+          // --- STATS COMPUTATION ---
+          const totalShows = watchlist.length;
+          const completedCount = watchlist.filter(i => i.userStatus === 'Completed').length;
+          const watchingCount = watchlist.filter(i => i.userStatus === 'Watching').length;
+          const planToCount = watchlist.filter(i => i.userStatus === 'Plan to Watch').length;
+          const averageScore = (() => {
+            const scores = watchlist.map(i => parseInt(i.userRating) || 0);
+            return scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '0.0';
+          })();
+
+          // --- FILTERED WATCHLIST ---
+          const filteredWatchlist = watchlist.filter(item => {
+            const matchesStatus = filterStatus === 'All' || item.userStatus === filterStatus;
+            const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                  item.genre.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesStatus && matchesSearch;
+          });
+
+          // --- BACKUP UTILITIES ---
+          const downloadBackup = () => {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(watchlist, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "my_drama_watchlist.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+          };
+
+          const uploadBackup = (e) => {
+            const fileReader = new FileReader();
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            fileReader.onload = (event) => {
+              try {
+                const parsed = JSON.parse(event.target.result);
+                if (Array.isArray(parsed)) {
+                  setWatchlist(parsed);
+                  alert("Backup restored!");
+                }
+              } catch {
+                alert("Error loading backup.");
+              }
+            };
+            fileReader.readAsText(file);
+          };
+
+          return (
+            <div style={{
+              ...styles.appViewport,
+              backgroundColor: darkMode ? '#111827' : '#f9fafb',
+              color: darkMode ? '#f3f4f6' : '#111827'
+            }}>
+              {/* HEADER WITH CREATOR CREDIT */}
+              <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', maxWidth:'1400px', margin:'0 auto 10px', flexWrap:'wrap', gap:'10px'}}>
+                <div>
+                  <h1 style={{margin:0, fontSize:'2rem'}}>📺 DramaHub Tracker</h1>
+                  <p style={{margin:'4px 0 0', fontSize:'0.85rem', color:'#6b7280', fontWeight:'600'}}>Created by Alnea Rodrigo Lenizo</p>
+                </div>
+                <button onClick={() => setDarkMode(!darkMode)} style={{...styles.themeToggle, backgroundColor: darkMode ? '#f43f5e' : '#434765'}}>
+                  {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+                </button>
+              </div>
+
+              {/* STATISTICS DASHBOARD */}
+              <div style={{...styles.statsRow, backgroundColor: darkMode ? '#1f2937' : '#ffffff'}}>
+                <div style={styles.statBox}><strong>Total Shows:</strong> <span style={{color:'#f43f5e'}}>{totalShows}</span></div>
+                <div style={styles.statBox}><strong>Avg Rating:</strong> ⭐ {averageScore} / 10</div>
+                <div style={styles.statBox}><strong>👀 Watching:</strong> {watchingCount}</div>
+                <div style={styles.statBox}><strong>✅ Completed:</strong> {completedCount}</div>
+                <div style={styles.statBox}><strong>📌 Plan to Watch:</strong> {planToCount}</div>
+              </div>
+
+              <div style={styles.dashboardLayout}>
+                <aside style={styles.sidebar}>
+                  
+                  {/* SEARCH & ADD FORM PANEL */}
+                  <div style={{...styles.cardWidget, backgroundColor: darkMode ? '#1f2937' : '#ffffff', position: 'relative', zIndex: '50'}}>
+                    <h2 style={styles.panelTitle}>Add New Masterpiece</h2>
+                    <form onSubmit={handleAddDrama}>
+                      <div style={styles.formGroup}>
+                        <label style={styles.label}>Drama Title</label>
+                        <input
+                          type="text"
+                          placeholder="Type title..."
+                          value={titleInput}
+                          onChange={handleInputChange}
+                          style={{...styles.inputText, backgroundColor: darkMode ? '#374151' : '#ffffff', color: darkMode ? '#fff' : '#000'}}
+                        />
+                        
+                        {suggestions.length > 0 && (
+                          <div style={{...styles.dropdownBox, backgroundColor: darkMode ? '#374151' : '#ffffff'}}>
+                            {suggestions.map((drama, idx) => (
+                              <div 
+                                key={idx} 
+                                onClick={() => handleSelectSuggestion(drama)}
+                                style={styles.dropdownItem}
+                                onMouseEnter={(e) => e.target.style.backgroundColor = darkMode ? '#4b5563' : '#f3f4f6'}
+                                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                              >
+                                🎬 {drama.name}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* EXPLICIT MANUAL IMAGE URL FIELD */}
+                      <div style={styles.formGroup}>
+                        <label style={styles.label}>Image Poster URL</label>
+                        <input
+                          type="text"
+                          placeholder="Paste direct image .jpg/.png link..."
+                          value={imageUrlInput}
+                          onChange={(e) => setImageUrlInput(e.target.value)}
+                          style={{...styles.inputText, backgroundColor: darkMode ? '#374151' : '#ffffff', color: darkMode ? '#fff' : '#000'}}
+                        />
+                      </div>
+
+                      {/* DYNAMIC FIELDS FOR ADVANCED MANUAL ENTRIES */}
+                      {isCustom && (
+                        <div style={{...styles.customFieldsBlock, borderLeft: darkMode ? '3px solid #f43f5e' : '3px solid #434765'}}>
+                          <p style={{margin:'0 0 10px', fontSize:'0.85rem', color: '#f43f5e'}}>✨ Custom Entry Fields:</p>
+                          <input type="text" placeholder="Country (e.g. Japanese Drama)" value={customFields.country} onChange={e=>setCustomFields({...customFields, country: e.target.value})} style={{...styles.inputText, marginBottom:'8px', fontSize:'0.85rem', backgroundColor: darkMode ? '#374151' : '#fff', color: darkMode ? '#fff' : '#000'}}/>
+                          <input type="text" placeholder="Genre" value={customFields.genre} onChange={e=>setCustomFields({...customFields, genre: e.target.value})} style={{...styles.inputText, marginBottom:'8px', fontSize:'0.85rem', backgroundColor: darkMode ? '#374151' : '#fff', color: darkMode ? '#fff' : '#000'}}/>
+                          <input type="text" placeholder="Episodes Count" value={customFields.episodes} onChange={e=>setCustomFields({...customFields, episodes: e.target.value})} style={{...styles.inputText, marginBottom:'8px', fontSize:'0.85rem', backgroundColor: darkMode ? '#374151' : '#fff', color: darkMode ? '#fff' : '#000'}}/>
+                          <input type="text" placeholder="Lead Cast Stars" value={customFields.characters} onChange={e=>setCustomFields({...customFields, characters: e.target.value})} style={{...styles.inputText, marginBottom:'8px', fontSize:'0.85rem', backgroundColor: darkMode ? '#374151' : '#fff', color: darkMode ? '#fff' : '#000'}}/>
+                          <textarea placeholder="Plot Summary/Synopsis" value={customFields.synopsis} onChange={e=>setCustomFields({...customFields, synopsis: e.target.value})} style={{...styles.inputText, height:'60px', fontSize:'0.85rem', backgroundColor: darkMode ? '#374151' : '#fff', color: darkMode ? '#fff' : '#000'}}></textarea>
+                        </div>
+                      )}
+
+                      <div style={styles.formGroup}>
+                        <label style={styles.label}>My Rating</label>
+                        <select value={myRating} onChange={(e) => setMyRating(e.target.value)} style={{...styles.selectInput, backgroundColor: darkMode ? '#374151' : '#ffffff', color: darkMode ? '#fff' : '#000'}}>
+                          <option>10 / 10 Stars</option>
+                          <option>9 / 10 Stars</option>
+                          <option>8 / 10 Stars</option>
+                          <option>7 / 10 Stars</option>
+                          <option>6 / 10 Stars</option>
+                          <option>5 / 10 Stars</option>
+                        </select>
+                      </div>
+
+                      <div style={styles.formGroup}>
+                        <label style={styles.label}>Status</label>
+                        <select value={status} onChange={(e) => setStatus(e.target.value)} style={{...styles.selectInput, backgroundColor: darkMode ? '#374151' : '#ffffff', color: darkMode ? '#fff' : '#000'}}>
+                          <option>Completed</option>
+                          <option>Watching</option>
+                          <option>Plan to Watch</option>
+                        </select>
+                      </div>
+
+                      <button type="submit" style={styles.primaryButton}>Save Show to Tracker</button>
+                    </form>
+                  </div>
+
+                  {/* DATA SECURITY PANEL */}
+                  <div style={{...styles.cardWidget, backgroundColor: darkMode ? '#1f2937' : '#ffffff', marginTop: '20px'}}>
+                    <h4 style={{margin: '0 0 12px'}}>💾 Data Backup Settings:</h4>
+                    <button onClick={downloadBackup} style={styles.backupDownloadBtn}>💾 Download Backup</button>
+                    <label style={styles.backupUploadLabel}>
+                      📁 Upload & Restore Backup
+                      <input type="file" accept=".json" onChange={uploadBackup} style={{ display: 'none' }} />
+                    </label>
+                  </div>
+                </aside>
+
+                <main style={styles.mainGridContent}>
+                  
+                  {/* FILTER & SEARCH MODULE */}
+                  <div style={{...styles.filterToolBar, backgroundColor: darkMode ? '#1f2937' : '#ffffff'}}>
+                    <input 
+                      type="text" 
+                      placeholder="🔍 Search saved watchlist titles or genres..." 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      style={{...styles.inputText, flex: '2', minWidth:'200px', backgroundColor: darkMode ? '#374151' : '#ffffff', color: darkMode ? '#fff' : '#000'}}
+                    />
+                    <select 
+                      value={filterStatus} 
+                      onChange={(e) => setFilterStatus(e.target.value)} 
+                      style={{...styles.selectInput, flex: '1', minWidth:'150px', backgroundColor: darkMode ? '#374151' : '#ffffff', color: darkMode ? '#fff' : '#000'}}
+                    >
+                      <option value="All">📂 Filter: All Statuses</option>
+                      <option value="Completed">✅ Completed</option>
+                      <option value="Watching">👀 Watching</option>
+                      <option value="Plan to Watch">📌 Plan to Watch</option>
+                    </select>
+                  </div>
+
+                  {filteredWatchlist.length === 0 ? (
+                    <p style={styles.emptyNotice}>No entries match your dashboard settings or active search filters.</p>
+                  ) : (
+                    <div style={styles.gridDeck}>
+                      {filteredWatchlist.map((item) => (
+                        <div key={item.id} style={{...styles.dramaCard, backgroundColor: darkMode ? '#1f2937' : '#ffffff'}}>
+                          <button onClick={() => handleDeleteCard(item.id)} style={styles.deleteBadge} title="Remove card">×</button>
+                          
+                          <div style={{...styles.imageBox, backgroundColor: darkMode ? '#111827' : '#e5e7eb'}}>
+                            <img src={item.image} alt={item.name} style={styles.displayImg} />
+                            <span style={styles.countryLabel}>{item.country}</span>
+                          </div>
+
+                          <div style={styles.cardInfoBody}>
+                            <h2 style={styles.showTitle}>{item.name}</h2>
+                            <p style={styles.metaLine}>🧬 <strong>Genre:</strong> {item.genre}</p>
+                            <p style={styles.metaLine}>🎞️ <strong>Episodes:</strong> {item.episodes}</p>
+                            <p style={styles.metaLine}>👥 <strong>Leads:</strong> {item.characters}</p>
+                            <p style={{...styles.synopsisText, backgroundColor: darkMode ? '#374151' : '#f3f4f6'}}>{item.synopsis}</p>
+                            
+                            <div style={{borderTop:'1px dashed #ccc', marginTop:'10px', paddingTop:'10px'}}>
+                              {editingId === item.id ? (
+                                <div>
+                                  <div style={{marginBottom:'8px'}}>
+                                    <label style={{fontSize:'0.8rem', fontWeight:'bold'}}>Score:</label>
+                                    <select value={item.userRating} onChange={(e) => handleUpdateCardField(item.id, 'userRating', e.target.value)} style={{...styles.selectInput, padding:'4px', fontSize:'0.85rem'}}>
+                                      <option>10 / 10 Stars</option><option>9 / 10 Stars</option><option>8 / 10 Stars</option>
+                                      <option>7 / 10 Stars</option><option>6 / 10 Stars</option><option>5 / 10 Stars</option>
+                                    </select>
+                                  </div>
+                                  <div style={{marginBottom:'8px'}}>
+                                    <label style={{fontSize:'0.8rem', fontWeight:'bold'}}>Status:</label>
+                                    <select value={item.userStatus} onChange={(e) => handleUpdateCardField(item.id, 'userStatus', e.target.value)} style={{...styles.selectInput, padding:'4px', fontSize:'0.85rem'}}>
+                                      <option>Completed</option><option>Watching</option><option>Plan to Watch</option>
+                                    </select>
+                                  </div>
+                                  <button onClick={() => setEditingId(null)} style={{...styles.primaryButton, padding:'4px 8px', fontSize:'0.8rem'}}>Done Editing</button>
+                                </div>
+                              ) : (
+                                <div>
+                                  <div style={styles.userScoreContainer}>⭐ <strong>My Score:</strong> {item.userRating}</div>
+                                  <div style={styles.userStatusContainer}>📌 <strong>Status:</strong> {item.userStatus}</div>
+                                  <button onClick={() => setEditingId(item.id)} style={styles.inlineEditBtn}>📝 Quick Progress Update</button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </main>
+              </div>
+              
+              {/* FOOTER PROTECTIVE WORK CREDIT */}
+              <footer style={{textAlign: 'center', margin: '40px 0 20px', fontSize: '0.85rem', opacity: '0.7'}}>
+                <hr style={{border: '0', borderTop: '1px dashed #ccc', marginBottom: '15px'}} />
+                © 2026 DramaHub Tracker Dashboard • All Rights Reserved • <strong>Created by Alnea Rodrigo Lenizo</strong>
+              </footer>
+            </div>
+          );
+        }
+
+        // --- 3. PRESENTATION GRAPHICS SPECIFICATIONS ---
+        const styles = {
+          appViewport: { minHeight: '100vh', padding: '20px' },
+          themeToggle: { border: 'none', color: '#fff', padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' },
+          statsRow: { display: 'flex', gap: '15px', flexWrap: 'wrap', maxWidth: '1400px', margin: '0 auto 20px', padding: '15px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' },
+          statBox: { flex: '1', minWidth: '150px', padding: '10px', textAlign: 'center', fontSize: '0.95rem', borderRadius: '6px', border: '1px solid rgba(0,0,0,0.05)' },
+          dashboardLayout: { display: 'flex', gap: '24px', flexWrap: 'wrap', maxWidth: '1400px', margin: '0 auto' },
+          sidebar: { flex: '1', minWidth: '300px', maxWidth: '360px' },
+          cardWidget: { borderRadius: '12px', padding: '24px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' },
+          panelTitle: { fontSize: '1.4rem', fontWeight: 'bold', margin: '0 0 20px' },
+          formGroup: { marginBottom: '16px', position: 'relative' },
+          customFieldsBlock: { padding: '10px', borderRadius: '8px', marginBottom: '16px', background: 'rgba(0,0,0,0.02)' },
+          filterToolBar: { display: 'flex', gap: '15px', flexWrap: 'wrap', padding: '15px', borderRadius: '12px', marginBottom: '20px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' },
+          label: { display: 'block', fontWeight: 'bold', marginBottom: '6px', fontSize: '0.9rem' },
+          inputText: { width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', boxSizing: 'border-box' },
+          dropdownBox: { position: 'absolute', top: '100%', left: '0', width: '100%', border: '1px solid #ccc', borderRadius: '6px', zIndex: '100', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' },
+          dropdownItem: { padding: '10px', cursor: 'pointer' },
+          selectInput: { width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc' },
+          primaryButton: { width: '100%', backgroundColor: '#434765', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' },
+          inlineEditBtn: { backgroundColor: 'transparent', color: '#434765', border: '1px solid #434765', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize:'0.8rem', fontWeight:'bold', marginTop:'4px' },
+          backupDownloadBtn: { width: '100%', backgroundColor: '#839e95', color: '#fff', border: 'none', padding: '10px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginBottom: '12px' },
+          backupUploadLabel: { display: 'block', backgroundColor: '#434765', color: '#fff', padding: '10px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', textAlign: 'center' },
+          mainGridContent: { flex: '3', minWidth: '400px' },
+          emptyNotice: { color: '#6b7280', fontSize: '1.1rem', textAlign:'center', marginTop:'40px' },
+          gridDeck: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' },
+          dramaCard: { borderRadius: '12px', overflow: 'hidden', position: 'relative', boxShadow: '0 4px 10px rgba(0,0,0,0.08)' },
+          deleteBadge: { position: 'absolute', top: '10px', right: '10px', zIndex: '10', width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#ff4d4d', color: '#fff', border: 'none', cursor: 'pointer' },
+          imageBox: { position: 'relative', height: '480px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }, 
+          displayImg: { width: '100%', height: '100%', objectFit: 'contain' },
+          countryLabel: { position: 'absolute', bottom: '10px', left: '10px', backgroundColor: '#3c3d5a', color: '#fff', padding: '3px 8px', borderRadius: '4px', fontSize: '0.75rem' },
+          cardInfoBody: { padding: '16px' },
+          showTitle: { margin: '0 0 12px', fontSize: '1.3rem', fontWeight: 'bold' },
+          metaLine: { margin: '0 0 6px', fontSize: '0.9rem' },
+          synopsisText: { fontSize: '0.85rem', padding: '10px', borderRadius: '6px', lineHeight: '1.4', margin: '12px 0' },
+          userScoreContainer: { margin: '4px 0', fontSize: '0.95rem' },
+          userStatusContainer: { margin: '4px 0', fontSize: '0.95rem' }
+        };
+
+        const rootElement = document.getElementById('root');
+        const reactRoot = ReactDOM.createRoot(rootElement);
+        reactRoot.render(<App />);
+    </script>
+</body>
+</html>
