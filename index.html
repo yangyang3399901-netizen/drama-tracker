@@ -21,8 +21,8 @@
 <body class="theme-night bg-[var(--bg)] text-[var(--text)] min-h-screen p-4 md:p-8 flex flex-col justify-between">
 
     <div class="max-w-6xl mx-auto w-full">
-        <!-- HEADER & THEME TOGGLE -->
-        <header class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-700 pb-4">
+        <!-- HEADER & TOOLBAR -->
+        <header class="flex flex-col lg:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-700 pb-4">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight flex items-center gap-2">
                     <i data-lucide="tv"></i> DramaHub Tracker <span class="text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full">PRO</span>
@@ -30,10 +30,25 @@
                 <p class="text-sm opacity-70 mt-1">Your ultimate binge companion</p>
             </div>
             
-            <div class="flex gap-2 bg-gray-800/50 p-1.5 rounded-xl border border-gray-700">
-                <button onclick="setTheme('night')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">🌌 Night</button>
-                <button onclick="setTheme('pastel')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">🌸 Pastel</button>
-                <button onclick="setTheme('cyber')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">⚡ Cyber</button>
+            <!-- Controls Toolbar (Themes + Data Backup) -->
+            <div class="flex flex-wrap gap-3 justify-center items-center">
+                <!-- Data Backup Utilities -->
+                <div class="flex gap-2 bg-gray-800/40 p-1.5 rounded-xl border border-gray-700">
+                    <button onclick="downloadBackup()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-700/60 hover:bg-gray-600 text-indigo-300 cursor-pointer transition">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i> Backup
+                    </button>
+                    <label class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-700/60 hover:bg-gray-600 text-emerald-300 cursor-pointer transition">
+                        <i data-lucide="upload" class="w-3.5 h-3.5"></i> Restore
+                        <input type="file" id="upload-file" accept=".json" onchange="uploadBackup(event)" class="hidden">
+                    </label>
+                </div>
+
+                <!-- Theme Changer Buttons -->
+                <div class="flex gap-2 bg-gray-800/50 p-1.5 rounded-xl border border-gray-700">
+                    <button onclick="setTheme('night')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">🌌 Night</button>
+                    <button onclick="setTheme('pastel')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">🌸 Pastel</button>
+                    <button onclick="setTheme('cyber')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">⚡ Cyber</button>
+                </div>
             </div>
         </header>
 
@@ -96,7 +111,6 @@
                     <option value="5">⭐ 5/10 Bad</option>
                 </select>
 
-                <!-- RESTORED: Image URL Field -->
                 <input type="url" id="img-url" placeholder="Drama Poster Image URL (Optional)" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
 
                 <input type="url" id="stream-url" placeholder="Streaming URL Link (Netflix, Viki, etc.)" class="md:col-span-3 bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
@@ -114,7 +128,7 @@
         </main>
     </div>
 
-    <!-- RESTORED & PROUD FOOTER SIGNATURE -->
+    <!-- FOOTER SIGNATURE -->
     <footer class="w-full text-center py-6 border-t border-gray-800/40 opacity-60 text-xs tracking-wide">
         <p class="flex items-center justify-center gap-1">
             <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-400"></i> 
@@ -134,6 +148,46 @@
         function setTheme(themeName) {
             document.body.className = `theme-${themeName} bg-[var(--bg)] text-[var(--text)] min-h-screen p-4 md:p-8 flex flex-col justify-between`;
             localStorage.setItem('appTheme', themeName);
+        }
+
+        // RESTORED: Backup Downloader Utility Logic
+        function downloadBackup() {
+            if (dramas.length === 0) {
+                alert("Your tracking dashboard is empty. Nothing to export!");
+                return;
+            }
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dramas, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "dramahub_backup.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        // RESTORED: Backup Upload / Injection Engine
+        function uploadBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (Array.isArray(importedData)) {
+                        if (confirm(`Found ${importedData.length} dramas in file. Overwrite your current local view?`)) {
+                            dramas = importedData;
+                            saveToStorage();
+                            alert("Database restored successfully!");
+                        }
+                    } else {
+                        alert("Invalid file blueprint structure. Make sure this is an authentic backup!");
+                    }
+                } catch (err) {
+                    alert("Error parsing system files.");
+                }
+            };
+            reader.readAsText(file);
         }
 
         function addDrama(e) {
@@ -197,7 +251,6 @@
                     ? `<a href="${item.streamUrl}" target="_blank" class="flex items-center justify-center gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 px-3 rounded-lg transition"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Stream</a>` 
                     : '';
 
-                // RESTORED: Dynamic Poster Display HTML code logic
                 const imgHeader = item.imgUrl 
                     ? `<img src="${item.imgUrl}" alt="Poster" class="w-full h-40 object-cover rounded-xl mb-3 border border-gray-700/20">` 
                     : '';
@@ -211,7 +264,6 @@
                             <button onclick="deleteDrama(${item.id})" class="text-gray-500 hover:text-rose-400 transition cursor-pointer p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </div>
                         
-                        <!-- Image placeholder injection -->
                         ${imgHeader}
 
                         <h3 class="text-lg font-bold tracking-tight text-white mb-1 line-clamp-1">${item.title}</h3>
