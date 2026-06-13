@@ -150,7 +150,6 @@
             localStorage.setItem('appTheme', themeName);
         }
 
-        // RESTORED: Backup Downloader Utility Logic
         function downloadBackup() {
             if (dramas.length === 0) {
                 alert("Your tracking dashboard is empty. Nothing to export!");
@@ -165,7 +164,6 @@
             downloadAnchor.remove();
         }
 
-        // RESTORED: Backup Upload / Injection Engine
         function uploadBackup(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -251,8 +249,9 @@
                     ? `<a href="${item.streamUrl}" target="_blank" class="flex items-center justify-center gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 px-3 rounded-lg transition"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Stream</a>` 
                     : '';
 
+                // MODIFIED: Height extended to h-64 and object-position centered for better poster framing
                 const imgHeader = item.imgUrl 
-                    ? `<img src="${item.imgUrl}" alt="Poster" class="w-full h-40 object-cover rounded-xl mb-3 border border-gray-700/20">` 
+                    ? `<img src="${item.imgUrl}" alt="Poster" class="w-full h-64 object-cover object-center rounded-xl mb-3 border border-gray-700/20 shadow-inner">` 
                     : '';
 
                 const card = document.createElement('div');
