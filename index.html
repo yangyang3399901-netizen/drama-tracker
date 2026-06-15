@@ -249,16 +249,18 @@
                     ? `<a href="${item.streamUrl}" target="_blank" class="flex items-center justify-center gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 px-3 rounded-lg transition"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Stream</a>` 
                     : '';
 
-                // MODIFIED: Height extended to h-64 and object-position centered for better poster framing
+                // NEW PRO INTERFACE: Expanded aspect ratio container with neutral background for portrait scaling layout stability
                 const imgHeader = item.imgUrl 
-                    ? `<img src="${item.imgUrl}" alt="Poster" class="w-full h-64 object-cover object-center rounded-xl mb-3 border border-gray-700/20 shadow-inner">` 
+                    ? `<div class="w-full h-96 bg-black/40 rounded-xl overflow-hidden mb-4 border border-gray-700/20 shadow-inner flex items-center justify-center">
+                         <img src="${item.imgUrl}" alt="Poster" class="max-w-full max-h-full object-contain">
+                       </div>` 
                     : '';
 
                 const card = document.createElement('div');
                 card.className = "bg-[var(--card)] rounded-2xl border border-gray-700/40 p-5 flex flex-col justify-between shadow-md relative group hover:border-indigo-500/40 transition";
                 card.innerHTML = `
                     <div>
-                        <div class="flex justify-between items-start gap-2 mb-2">
+                        <div class="flex justify-between items-start gap-2 mb-3">
                             <span class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${badgeColor}">${item.status}</span>
                             <button onclick="deleteDrama(${item.id})" class="text-gray-500 hover:text-rose-400 transition cursor-pointer p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </div>
