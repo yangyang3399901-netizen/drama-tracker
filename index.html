@@ -8,7 +8,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6366f1">
     
-    <link rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=256&h=256&fit=crop">
+    <link class="rounded-full" rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=256&h=256&fit=crop">
     <title>Drama Watchlist Tracker (Pro)</title>
     
     <!-- Tailwind CSS for sleek styling -->
@@ -100,6 +100,7 @@
                     <option value="Watching">🎬 Currently Watching</option>
                     <option value="Plan to Watch">⏳ Plan to Watch</option>
                     <option value="Completed">✅ Completed</option>
+                    <option value="Dropped">🗑️ Dropped</option>
                 </select>
                 
                 <div class="flex gap-2">
@@ -143,7 +144,7 @@
 
     <!-- APP ENGINE SCRIPT -->
     <script>
-        // 🌟 HARDCODED PUBLIC SHOWCASE DATABASE
+        // Database Layout
         const PUBLIC_SHOWCASE_DRAMAS = [
             { id: 1, title: "Mr. Queen (2020)", genre: "Historical (Sageuk), Romantic Comedy, Fantasy, Time Travel, Body Swap, Political Drama", status: "Completed", currentEp: 20, totalEp: 20, rating: "10", imgUrl: "https://i.pinimg.com/736x/ba/46/84/ba46845241cb8db895f8dddb94f6bd3d.jpg", streamUrl: "https://www.netflix.com/title/81422314" },
             { id: 2, title: "Filing for Love (2026)", genre: "Workplace, Romance, Comedy, Melodrama, Corporate Mystery, Rivals to Lovers", status: "Completed", currentEp: 12, totalEp: 12, rating: "9", imgUrl: "https://i.pinimg.com/736x/51/b8/58/51b85812fa5b02df23f5d10535eb3511.jpg", streamUrl: "https://www.viki.com/" },
@@ -220,7 +221,7 @@
             const total = parseInt(document.getElementById('total-ep').value) || 16;
             let status = document.getElementById('status').value;
             
-            if (current >= total) status = "Completed";
+            if (current >= total && status !== "Dropped") status = "Completed";
 
             const newItem = {
                 id: Date.now(),
@@ -243,7 +244,7 @@
             const item = dramas.find(d => d.id === id);
             if (item) {
                 item.currentEp = Math.max(0, Math.min(item.totalEp, item.currentEp + amount));
-                if (item.currentEp === item.totalEp) {
+                if (item.currentEp === item.totalEp && item.status !== "Dropped") {
                     item.status = "Completed";
                 }
                 saveToStorage();
@@ -270,7 +271,7 @@
                 item.imgUrl = document.getElementById(`edit-img-${id}`).value;
                 item.streamUrl = document.getElementById(`edit-stream-${id}`).value;
 
-                if (item.currentEp >= item.totalEp) {
+                if (item.currentEp >= item.totalEp && item.status !== "Dropped") {
                     item.status = "Completed";
                 }
 
@@ -289,7 +290,7 @@
             grid.innerHTML = '';
 
             const sortedDramas = [...dramas].sort((a, b) => {
-                const weights = { "Watching": 1, "Plan to Watch": 2, "Completed": 3 };
+                const weights = { "Watching": 1, "Plan to Watch": 2, "Completed": 3, "Dropped": 4 };
                 return weights[a.status] - weights[b.status];
             });
 
@@ -304,7 +305,12 @@
             }
 
             sortedDramas.forEach(item => {
-                const badgeColor = item.status === 'Watching' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : item.status === 'Completed' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
+                let badgeColor = 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
+                if (item.status === 'Watching') badgeColor = 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
+                else if (item.status === 'Completed') badgeColor = 'bg-green-500/20 text-green-400 border border-green-500/30';
+                else if (item.status === 'Plan to Watch') badgeColor = 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
+                else if (item.status === 'Dropped') badgeColor = 'bg-rose-500/20 text-rose-400 border border-rose-500/30';
+
                 const card = document.createElement('div');
                 card.className = "bg-[var(--card)] rounded-2xl border border-gray-700/40 p-5 flex flex-col justify-between shadow-md relative group hover:border-indigo-500/40 transition";
 
@@ -322,6 +328,7 @@
                                         <option value="Watching" ${item.status === 'Watching' ? 'selected' : ''}>Watching</option>
                                         <option value="Plan to Watch" ${item.status === 'Plan to Watch' ? 'selected' : ''}>Plan to Watch</option>
                                         <option value="Completed" ${item.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                        <option value="Dropped" ${item.status === 'Dropped' ? 'selected' : ''}>Dropped</option>
                                     </select>
                                 </div>
                                 <div>
@@ -332,6 +339,7 @@
                                         <option value="8" ${item.rating === '8' ? 'selected' : ''}>8/10</option>
                                         <option value="7" ${item.rating === '7' ? 'selected' : ''}>7/10</option>
                                         <option value="6" ${item.rating === '6' ? 'selected' : ''}>6/10</option>
+                                        <option value="5" ${item.rating === '5' ? 'selected' : ''}>5/10</option>
                                     </select>
                                 </div>
                             </div>
