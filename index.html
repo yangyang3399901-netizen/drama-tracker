@@ -17,6 +17,7 @@
 <body class="theme-night bg-[var(--bg)] text-[var(--text)] min-h-screen p-4 md:p-8 flex flex-col justify-between">
 
     <div class="max-w-6xl mx-auto w-full">
+        <!-- HEADER -->
         <header class="flex flex-col lg:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-700 pb-4">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight flex items-center gap-2">
@@ -43,6 +44,7 @@
             </div>
         </header>
 
+        <!-- STATISTICS -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-[var(--card)] p-4 rounded-2xl border border-gray-700/30 flex items-center gap-3 shadow-sm">
                 <div class="p-3 bg-blue-500/10 text-blue-400 rounded-xl"><i data-lucide="clapperboard"></i></div>
@@ -74,6 +76,7 @@
             </div>
         </section>
 
+        <!-- ADD FORM -->
         <section class="bg-[var(--card)] p-6 rounded-2xl border border-gray-700/30 mb-8 shadow-xl">
             <h2 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="plus-circle" class="text-indigo-400"></i> Track a New Series</h2>
             <form id="drama-form" onsubmit="addDrama(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -99,12 +102,14 @@
             </form>
         </section>
 
+        <!-- GRID -->
         <main class="mb-12">
             <h2 class="text-xl font-black mb-4 flex items-center gap-2"><i data-lucide="layout-grid" class="text-emerald-400"></i> Active Monitor Watchlist</h2>
             <div id="watchlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </main>
     </div>
 
+    <!-- FOOTER -->
     <footer class="w-full text-center py-6 border-t border-gray-800/40 opacity-60 text-xs tracking-wide">
         <p class="flex items-center justify-center gap-1">
             <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-400"></i> Created by: <span class="font-bold text-white opacity-90">Alnea Rodrigo Lenizo</span>
@@ -156,7 +161,7 @@
             { id: 41, title: "Hidden Love (2023)", genre: "Romance, Youth, Coming-of-Age, Family, Slice of Life, Drama", status: "Completed", currentEp: 25, totalEp: 25, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/5/5c/Hidden_Love_%28TV_series%29.jpg", streamUrl: "https://www.netflix.com/" },
             { id: 42, title: "Go Ahead (2020)", genre: "Romance, Youth, Family, Friendship, Slice of Life, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/3/39/Go_Ahead_%28TV_series%29.jpg", streamUrl: "https://www.viki.com/" },
             { id: 43, title: "A Love So Beautiful (2017)", genre: "Romance, Youth, School, Coming-of-Age, Comedy, Drama", status: "Completed", currentEp: 23, totalEp: 23, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/0f/A_Love_So_Beautiful_%28TV_series%29.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 44, title: "Put Your Head on My Shoulder (2019)", genre: "Romance, Youth, College, Comedy, Slice of Life, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/c/c8/Put_Your_Head_on_My_Shoulder.jpg", streamUrl: "https://www.netflix.com/" },
+            { id: 44, title: "Put Your Head on My Shoulder (2019)", genre: "Romance, Youth, College, Gaming, Comedy, Slice of Life, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/c/c8/Put_Your_Head_on_My_Shoulder.jpg", streamUrl: "https://www.netflix.com/" },
             { id: 45, title: "Unforgettable Love (2021)", genre: "Romance, Comedy, Family, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://i.mydramalist.com/2wJ7J_4f.jpg", streamUrl: "https://www.viki.com/" },
             { id: 46, title: "You Are My Glory (2021)", genre: "Romance, Workplace, Slice of Life, Drama", status: "Completed", currentEp: 32, totalEp: 32, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/e/e5/You_Are_My_Glory.jpg", streamUrl: "https://www.viki.com/" },
             { id: 47, title: "Falling Into Your Smile (2021)", genre: "Romance, Esports, Youth, Comedy, Drama", status: "Completed", currentEp: 31, totalEp: 31, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/5/53/Falling_Into_Your_Smile.jpg", streamUrl: "https://www.viki.com/" },
@@ -352,7 +357,7 @@
                         </div>`;
                 } else {
                     const streamBtn = item.streamUrl ? `<a href="${item.streamUrl}" target="_blank" class="flex items-center justify-center gap-1.5 text-xs font-semibold bg-emerald-600 text-white py-1.5 px-3 rounded-lg transition"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Stream</a>` : '';
-                    const imgHeader = item.imgUrl ? `<div class="w-full h-96 bg-black/40 rounded-xl overflow-hidden mb-4 border border-gray-700/20 flex items-center justify-center"><img src="${item.imgUrl}" alt="Poster" class="max-w-full max-h-full object-contain"></div>` : `<div class="w-full h-40 bg-gray-800/40 rounded-xl mb-4 border border-dashed border-gray-700 flex flex-col items-center justify-center opacity-40"><i data-lucide="image" class="mb-1 w-5 h-5"></i><span class="text-[10px]">No Poster Link</span></div>`;
+                    const imgHeader = item.imgUrl ? `<div class="w-full h-96 bg-black/40 rounded-xl overflow-hidden mb-4 border border-gray-700/20 flex items-center justify-center"><img src="${item.imgUrl}" alt="Poster" referrerpolicy="no-referrer" class="max-w-full max-h-full object-contain"></div>` : `<div class="w-full h-40 bg-gray-800/40 rounded-xl mb-4 border border-dashed border-gray-700 flex flex-col items-center justify-center opacity-40"><i data-lucide="image" class="mb-1 w-5 h-5"></i><span class="text-[10px]">No Poster Link</span></div>`;
 
                     card.innerHTML = `
                         <div>
