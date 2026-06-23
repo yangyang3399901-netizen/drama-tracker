@@ -3,19 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Link to our Mobile App blueprint -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6366f1">
-    
     <link class="rounded-full" rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=256&h=256&fit=crop">
     <title>Drama Watchlist Tracker (Pro)</title>
-    
-    <!-- Tailwind CSS for sleek styling -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
         body { transition: background-color 0.3s, color 0.3s; }
         .theme-night { --bg: #111827; --card: #1f2937; --text: #f9fafb; --accent: #6366f1; }
@@ -26,7 +17,6 @@
 <body class="theme-night bg-[var(--bg)] text-[var(--text)] min-h-screen p-4 md:p-8 flex flex-col justify-between">
 
     <div class="max-w-6xl mx-auto w-full">
-        <!-- HEADER & TOOLBAR -->
         <header class="flex flex-col lg:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-700 pb-4">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight flex items-center gap-2">
@@ -35,9 +25,7 @@
                 <p class="text-sm opacity-70 mt-1">Your ultimate binge companion</p>
             </div>
             
-            <!-- Controls Toolbar (Themes + Data Backup) -->
             <div class="flex flex-wrap gap-3 justify-center items-center">
-                <!-- Data Backup Utilities -->
                 <div class="flex gap-2 bg-gray-800/40 p-1.5 rounded-xl border border-gray-700">
                     <button onclick="downloadBackup()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-700/60 hover:bg-gray-600 text-indigo-300 cursor-pointer transition">
                         <i data-lucide="download" class="w-3.5 h-3.5"></i> Backup
@@ -47,8 +35,6 @@
                         <input type="file" id="upload-file" accept=".json" onchange="uploadBackup(event)" class="hidden">
                     </label>
                 </div>
-
-                <!-- Theme Changer Buttons -->
                 <div class="flex gap-2 bg-gray-800/50 p-1.5 rounded-xl border border-gray-700">
                     <button onclick="setTheme('night')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">🌌 Night</button>
                     <button onclick="setTheme('pastel')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">🌸 Pastel</button>
@@ -57,7 +43,6 @@
             </div>
         </header>
 
-        <!-- GLOBAL STATISTICS BANNER -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-[var(--card)] p-4 rounded-2xl border border-gray-700/30 flex items-center gap-3 shadow-sm">
                 <div class="p-3 bg-blue-500/10 text-blue-400 rounded-xl"><i data-lucide="clapperboard"></i></div>
@@ -89,62 +74,44 @@
             </div>
         </section>
 
-        <!-- ADD NEW DRAMA FORM -->
         <section class="bg-[var(--card)] p-6 rounded-2xl border border-gray-700/30 mb-8 shadow-xl">
             <h2 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="plus-circle" class="text-indigo-400"></i> Track a New Series</h2>
             <form id="drama-form" onsubmit="addDrama(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" id="title" placeholder="Drama Title (e.g., Crash Landing on You)" required class="bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
-                <input type="text" id="genre" placeholder="Genre (e.g., Romance, Thriller)" required class="bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
-                
-                <select id="status" class="bg-[var(--bg)] border border-gray-700/50 p-3 rounded-xl text-sm focus:outline-none w-full">
+                <input type="text" id="title" placeholder="Drama Title" required class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-full">
+                <input type="text" id="genre" placeholder="Genre" required class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-full">
+                <select id="status" class="bg-[var(--bg)] border border-gray-700/50 p-3 rounded-xl text-sm w-full">
                     <option value="Watching">🎬 Currently Watching</option>
                     <option value="Plan to Watch">⏳ Plan to Watch</option>
-                    <option value="Completed">✅ Completed</option>
+                    <option value="Completed" selected>✅ Completed</option>
                     <option value="Dropped">🗑️ Dropped</option>
                 </select>
-                
                 <div class="flex gap-2">
-                    <input type="number" id="current-ep" placeholder="Current Ep" min="0" value="0" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-1/2 text-center">
+                    <input type="number" id="current-ep" placeholder="Current Ep" min="0" value="16" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-1/2 text-center">
                     <input type="number" id="total-ep" placeholder="Total Eps" min="1" value="16" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-1/2 text-center">
                 </div>
-
-                <select id="rating" class="bg-[var(--bg)] border border-gray-700/50 p-3 rounded-xl text-sm focus:outline-none w-full">
+                <select id="rating" class="bg-[var(--bg)] border border-gray-700/50 p-3 rounded-xl text-sm w-full">
                     <option value="10">⭐ 10/10 Masterpiece</option>
                     <option value="9">⭐ 9/10 Amazing</option>
-                    <option value="8">⭐ 8/10 Really Good</option>
-                    <option value="7">⭐ 7/10 Good</option>
-                    <option value="6">⭐ 6/10 Okay</option>
-                    <option value="5">⭐ 5/10 Bad</option>
                 </select>
-
-                <input type="url" id="img-url" placeholder="Drama Poster Image URL (Optional)" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
-
-                <input type="url" id="stream-url" placeholder="Streaming URL Link (Netflix, Viki, etc.)" class="md:col-span-3 bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
-
-                <button type="submit" class="md:col-span-3 bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl transition text-white cursor-pointer shadow-lg shadow-indigo-600/20">Save to My Dashboard</button>
+                <input type="url" id="img-url" placeholder="Poster Image URL" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-full">
+                <input type="url" id="stream-url" placeholder="Streaming URL Link" class="md:col-span-3 bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-full">
+                <button type="submit" class="md:col-span-3 bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl transition text-white cursor-pointer shadow-lg">Save to My Dashboard</button>
             </form>
         </section>
 
-        <!-- DASHBOARD GRID DISPLAY -->
         <main class="mb-12">
             <h2 class="text-xl font-black mb-4 flex items-center gap-2"><i data-lucide="layout-grid" class="text-emerald-400"></i> Active Monitor Watchlist</h2>
-            <div id="watchlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Javascript populates cards here automatically -->
-            </div>
+            <div id="watchlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </main>
     </div>
 
-    <!-- FOOTER SIGNATURE -->
     <footer class="w-full text-center py-6 border-t border-gray-800/40 opacity-60 text-xs tracking-wide">
         <p class="flex items-center justify-center gap-1">
-            <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-400"></i> 
-            Created by: <span class="font-bold text-white opacity-90">Alnea Rodrigo Lenizo</span>
+            <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-400"></i> Created by: <span class="font-bold text-white opacity-90">Alnea Rodrigo Lenizo</span>
         </p>
     </footer>
 
-    <!-- APP ENGINE SCRIPT -->
     <script>
-        // Database Layout
         const PUBLIC_SHOWCASE_DRAMAS = [
             { id: 1, title: "Crash Landing on You (2019)", genre: "Romance, Romantic Comedy, Military, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/8/8c/Crash_Landing_on_You_main_poster.jpg", streamUrl: "https://www.netflix.com/" },
             { id: 2, title: "Goblin (2016)", genre: "Romance, Fantasy, Supernatural, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/08/Guardian_The_Lonely_and_Great_God.jpg", streamUrl: "https://www.viki.com/" },
@@ -179,7 +146,7 @@
             { id: 31, title: "Arthdal Chronicles (2019)", genre: "Fantasy, Historical, Action, Adventure, Drama", status: "Completed", currentEp: 18, totalEp: 18, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/8/89/Arthdal_Chronicles.jpg", streamUrl: "https://www.netflix.com/" },
             { id: 32, title: "Itaewon Class (2020)", genre: "Business, Romance, Youth, Slice of Life, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/08/Itaewon_Class.jpg", streamUrl: "https://www.netflix.com/" },
             { id: 33, title: "My ID Is Gangnam Beauty (2018)", genre: "Romance, Youth, School, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/6/68/My_ID_Is_Gangnam_Beauty.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 34, title: "Legend of the Blue Sea (2016)", genre: "Romance, Fantasy, Comedy, Drama", status: "Completed", currentEp: 20, totalEp: 20, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/92/Legend of the Blue Sea.jpg", streamUrl: "https://www.viki.com/" },
+            { id: 34, title: "Legend of the Blue Sea (2016)", genre: "Romance, Fantasy, Comedy, Drama", status: "Completed", currentEp: 20, totalEp: 20, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/92/Legend_of_the_Blue_Sea.jpg", streamUrl: "https://www.viki.com/" },
             { id: 35, title: "My Love from the Star (2013)", genre: "Romance, Fantasy, Comedy, Drama", status: "Completed", currentEp: 21, totalEp: 21, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/3/3b/My_Love_from_the_Star.jpg", streamUrl: "https://www.viki.com/" },
             { id: 36, title: "Boys Over Flowers (2009)", genre: "Romance, School, Youth, Comedy, Drama", status: "Completed", currentEp: 25, totalEp: 25, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/7/74/Boys_Over_Flowers_2009.jpg", streamUrl: "https://www.netflix.com/" },
             { id: 37, title: "Playful Kiss (2010)", genre: "Romance, School, Youth, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/e/e0/Playful_Kiss.jpg", streamUrl: "https://www.viki.com/" },
@@ -191,7 +158,7 @@
             { id: 43, title: "A Love So Beautiful (2017)", genre: "Romance, Youth, School, Coming-of-Age, Comedy, Drama", status: "Completed", currentEp: 23, totalEp: 23, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/0f/A_Love_So_Beautiful_%28TV_series%29.jpg", streamUrl: "https://www.netflix.com/" },
             { id: 44, title: "Put Your Head on My Shoulder (2019)", genre: "Romance, Youth, College, Comedy, Slice of Life, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/c/c8/Put_Your_Head_on_My_Shoulder.jpg", streamUrl: "https://www.netflix.com/" },
             { id: 45, title: "Unforgettable Love (2021)", genre: "Romance, Comedy, Family, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://i.mydramalist.com/2wJ7J_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 46, title: "You Are My Glory (2021)", genre: "Romance, Workplace, Slice of Life, Drama", status: "Completed", currentEp: 32, totalEp: 32, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/e/e5/You_Are_My_Glory.jpg", streamUrl: "https://www.viki.com/" },
+            { id: 46, title: "You Are My Glory (2021)", genre: "Romance, Workplace, Slice of Life, Drama", status: "Completed", currentEp: 32, totalEp: 32, tracking: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/e/e5/You_Are_My_Glory.jpg", streamUrl: "https://www.viki.com/" },
             { id: 47, title: "Falling Into Your Smile (2021)", genre: "Romance, Esports, Youth, Comedy, Drama", status: "Completed", currentEp: 31, totalEp: 31, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/5/53/Falling_Into_Your_Smile.jpg", streamUrl: "https://www.viki.com/" },
             { id: 48, title: "Love O2O (2016)", genre: "Romance, Youth, College, Gaming, Comedy, Drama", status: "Completed", currentEp: 30, totalEp: 30, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/7/7f/Love_O2O_%28TV_series%29.jpg", streamUrl: "https://www.netflix.com/" },
             { id: 49, title: "Lighter and Princess (2022)", genre: "Romance, Youth, School, Coming-of-Age, Drama", status: "Completed", currentEp: 36, totalEp: 36, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/6/6c/Lighter_%26_Princess.jpg", streamUrl: "https://www.viki.com/" },
@@ -210,266 +177,5 @@
             { id: 62, title: "The Legend of Shen Li (2024)", genre: "Xianxia, Romance, Fantasy, Adventure, Drama", status: "Completed", currentEp: 39, totalEp: 39, rating: "10", imgUrl: "https://i.pinimg.com/736x/7c/f0/59/7cf0597758a604853d37a7f610ea3e30.jpg", streamUrl: "https://wetv.vip/" },
             { id: 63, title: "The Rebel Princess (2021)", genre: "Romance, Historical, Political, Drama", status: "Completed", currentEp: 68, totalEp: 68, rating: "10", imgUrl: "https://i.mydramalist.com/6L3x6_4f.jpg", streamUrl: "https://www.viki.com/" },
             { id: 64, title: "The Sword and the Brocade (2021)", genre: "Romance, Historical, Family, Drama", status: "Completed", currentEp: 45, totalEp: 45, rating: "10", imgUrl: "https://i.mydramalist.com/2wJ7J_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 65, title: "Eternal Love (2017)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 58, totalEp: 58, rating: "10", imgUrl: "https://i.1200x/4f/5f/a7/4f5fa7b79b1f3011b0e5651eab18dd50.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 66, title: "Eternal Love of Dream (2020)", genre: "Xianxia, Fantasy, Romance, Historical, Drama", status: "Completed", currentEp: 56, totalEp: 56, rating: "10", imgUrl: "https://i.pinimg.com/736x/43/31/40/4331400018c544ae71d77d0b787c1bc4.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 67, title: "Ashes of Love (2018)", genre: "Romance, Xianxia, Fantasy, Historical, Adventure, Drama", status: "Completed", currentEp: 63, totalEp: 63, rating: "10", imgUrl: "https://i.1200x/91/9c/3a/919c3a2f40b38e34e069f7b350693b72.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 68, title: "Love and Redemption (2020)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 59, totalEp: 59, rating: "10", imgUrl: "https://i.mydramalist.com/6LxVj_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 69, title: "Ancient Love Poetry (2021)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 49, totalEp: 49, rating: "10", imgUrl: "https://i.mydramalist.com/XV5yq_4f.jpg", streamUrl: "https://wetv.vip/" },
-            { id: 70, title: "The Last Immortal (2023)", genre: "Romance, Xianxia, Fantasy, Adventure, Historical, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.pinimg.com/736x/08/56/ab/0856ab1445220b49312b2a02101ffb97.jpg", streamUrl: "https://wetv.vip/" },
-            { id: 71, title: "Immortal Samsara (2022)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 38, totalEp: 38, rating: "10", imgUrl: "https://i.pinimg.com/736x/de/9d/6f/de9d6f90538a3a45d6f07d559523a440.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 72, title: "Beauty of Resilience (2023)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 36, totalEp: 36, rating: "10", imgUrl: "https://i.pinimg.com/736x/31/73/cd/3173cdf9bea165b8dbd579fd4ad41747.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 73, title: "Till the End of the Moon (2023)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.mydramalist.com/2wJ7J_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 74, title: "Love of a Thousand Years (2020)", genre: "Romance, Fantasy, Historical, Xianxia, Drama", status: "Completed", currentEp: 30, totalEp: 30, rating: "10", imgUrl: "https://i.pinimg.com/736x/d8/12/ac/d812ac7603cd7535b94c933c7bc9d509.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 75, title: "The Legends (2019)", genre: "Romance, Fantasy, Wuxia, Historical, Drama", status: "Completed", currentEp: 55, totalEp: 55, rating: "10", imgUrl: "https://i.mydramalist.com/Xw7mY_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 76, title: "Novoland: Pearl Eclipse (2021)", genre: "Romance, Fantasy, Historical, Political, Drama", status: "Completed", currentEp: 48, totalEp: 48, rating: "10", imgUrl: "https://i.mydramalist.com/XV5yq_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 77, title: "Legend of Yunxi (2018)", genre: "Romance, Historical, Costume, Political, Drama", status: "Completed", currentEp: 48, totalEp: 48, rating: "10", imgUrl: "https://i.pinimg.com/736x/c6/7f/53/c67f530a606aec53cda25c1e5af62419.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 78, title: "The Blooms at Ruyi Pavilion (2020)", genre: "Romance, Historical, Costume, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.mydramalist.com/6LxVj_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 79, title: "General's Lady (2020)", genre: "Romance, Historical, Comedy, Drama", status: "Completed", currentEp: 30, totalEp: 30, rating: "10", imgUrl: "https://i.mydramalist.com/6L3x6_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 80, title: "Romance of Tiger and Rose (2020)", genre: "Romance, Comedy, Fantasy, Historical, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://i.1200x/ed/53/71/ed5371e18e44eee82c223ced5811dbca.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 81, title: "Love Better Than Immortality (2019)", genre: "Romance, Fantasy, Historical, Comedy, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.mydramalist.com/2wJ7J_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 82, title: "Under the Power (2019)", genre: "Romance, Historical, Mystery, Wuxia, Drama", status: "Completed", currentEp: 55, totalEp: 55, rating: "10", imgUrl: "https://i.mydramalist.com/Xw7mY_4f.jpg", streamUrl: "https://www.viki.com/" }
-        ];
-
-        // Core App Logic
-        let dramas = JSON.parse(localStorage.getItem('dramaData'));
-        if (!dramas || dramas.length === 0) {
-            dramas = [...PUBLIC_SHOWCASE_DRAMAS];
-            localStorage.setItem('dramaData', JSON.stringify(dramas));
-        }
-
-        function saveToStorage() {
-            localStorage.setItem('dramaData', JSON.stringify(dramas));
-            renderDashboard();
-        }
-
-        function setTheme(themeName) {
-            document.body.className = `theme-${themeName} bg-[var(--bg)] text-[var(--text)] min-h-screen p-4 md:p-8 flex flex-col justify-between`;
-            localStorage.setItem('appTheme', themeName);
-        }
-
-        function downloadBackup() {
-            if (dramas.length === 0) return alert("Your tracking dashboard is empty.");
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dramas, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "dramahub_backup.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-
-        function uploadBackup(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (Array.isArray(importedData)) {
-                        dramas = importedData;
-                        saveToStorage();
-                        alert("Database restored successfully!");
-                    }
-                } catch (err) { alert("Error parsing system files."); }
-            };
-            reader.readAsText(file);
-        }
-
-        function addDrama(e) {
-            e.preventDefault();
-            const current = parseInt(document.getElementById('current-ep').value) || 0;
-            const total = parseInt(document.getElementById('total-ep').value) || 16;
-            let status = document.getElementById('status').value;
-            
-            if (current >= total && status !== "Dropped") status = "Completed";
-
-            const newItem = {
-                id: Date.now(),
-                title: document.getElementById('title').value,
-                genre: document.getElementById('genre').value,
-                status: status,
-                currentEp: current,
-                totalEp: total,
-                rating: document.getElementById('rating').value,
-                imgUrl: document.getElementById('img-url').value || '',
-                streamUrl: document.getElementById('stream-url').value || '',
-                isEditing: false
-            };
-            dramas.push(newItem);
-            document.getElementById('drama-form').reset();
-            saveToStorage();
-        }
-
-        function adjustEpisode(id, amount) {
-            const item = dramas.find(d => d.id === id);
-            if (item) {
-                item.currentEp = Math.max(0, Math.min(item.totalEp, item.currentEp + amount));
-                if (item.currentEp === item.totalEp && item.status !== "Dropped") {
-                    item.status = "Completed";
-                }
-                saveToStorage();
-            }
-        }
-
-        function toggleEdit(id) {
-            const item = dramas.find(d => d.id === id);
-            if (item) {
-                item.isEditing = !item.isEditing;
-                renderDashboard();
-            }
-        }
-
-        function saveInlineEdit(id) {
-            const item = dramas.find(d => d.id === id);
-            if (item) {
-                item.title = document.getElementById(`edit-title-${id}`).value;
-                item.genre = document.getElementById(`edit-genre-${id}`).value;
-                item.status = document.getElementById(`edit-status-${id}`).value;
-                item.currentEp = parseInt(document.getElementById(`edit-current-${id}`).value) || 0;
-                item.totalEp = parseInt(document.getElementById(`edit-total-${id}`).value) || 16;
-                item.rating = document.getElementById(`edit-rating-${id}`).value;
-                item.imgUrl = document.getElementById(`edit-img-${id}`).value;
-                item.streamUrl = document.getElementById(`edit-stream-${id}`).value;
-
-                if (item.currentEp >= item.totalEp && item.status !== "Dropped") {
-                    item.status = "Completed";
-                }
-
-                item.isEditing = false;
-                saveToStorage();
-            }
-        }
-
-        function deleteDrama(id) {
-            dramas = dramas.filter(d => d.id !== id);
-            saveToStorage();
-        }
-
-        function renderDashboard() {
-            const grid = document.getElementById('watchlist-grid');
-            grid.innerHTML = '';
-
-            const sortedDramas = [...dramas].sort((a, b) => {
-                const weights = { "Watching": 1, "Plan to Watch": 2, "Completed": 3, "Dropped": 4 };
-                return weights[a.status] - weights[b.status];
-            });
-
-            document.getElementById('stat-total').innerText = dramas.length;
-            document.getElementById('stat-watching').innerText = dramas.filter(d => d.status === 'Watching').length;
-            document.getElementById('stat-masterpieces').innerText = dramas.filter(d => d.rating === '10').length;
-            document.getElementById('stat-episodes').innerText = dramas.reduce((acc, curr) => acc + curr.currentEp, 0);
-
-            if(sortedDramas.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 opacity-50 text-sm">Your monitoring array is currently clean.</div>`;
-                return;
-            }
-
-            sortedDramas.forEach(item => {
-                let badgeColor = 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
-                if (item.status === 'Watching') badgeColor = 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
-                else if (item.status === 'Completed') badgeColor = 'bg-green-500/20 text-green-400 border border-green-500/30';
-                else if (item.status === 'Plan to Watch') badgeColor = 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
-                else if (item.status === 'Dropped') badgeColor = 'bg-rose-500/20 text-rose-400 border border-rose-500/30';
-
-                const card = document.createElement('div');
-                card.className = "bg-[var(--card)] rounded-2xl border border-gray-700/40 p-5 flex flex-col justify-between shadow-md relative group hover:border-indigo-500/40 transition";
-
-                if (item.isEditing) {
-                    card.innerHTML = `
-                        <div class="space-y-3">
-                            <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-400">Editing Card Details</h4>
-                            <input type="text" id="edit-title-${item.id}" value="${item.title}" placeholder="Title" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-white">
-                            <input type="text" id="edit-genre-${item.id}" value="${item.genre}" placeholder="Genres" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-white">
-                            
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="text-[10px] opacity-60">Status</label>
-                                    <select id="edit-status-${item.id}" class="w-full bg-gray-800 border border-gray-700 p-2 rounded-xl text-xs text-white">
-                                        <option value="Watching" ${item.status === 'Watching' ? 'selected' : ''}>Watching</option>
-                                        <option value="Plan to Watch" ${item.status === 'Plan to Watch' ? 'selected' : ''}>Plan to Watch</option>
-                                        <option value="Completed" ${item.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                                        <option value="Dropped" ${item.status === 'Dropped' ? 'selected' : ''}>Dropped</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="text-[10px] opacity-60">Score Rating</label>
-                                    <select id="edit-rating-${item.id}" class="w-full bg-gray-800 border border-gray-700 p-2 rounded-xl text-xs text-white">
-                                        <option value="10" ${item.rating === '10' ? 'selected' : ''}>10/10</option>
-                                        <option value="9" ${item.rating === '9' ? 'selected' : ''}>9/10</option>
-                                        <option value="8" ${item.rating === '8' ? 'selected' : ''}>8/10</option>
-                                        <option value="7" ${item.rating === '7' ? 'selected' : ''}>7/10</option>
-                                        <option value="6" ${item.rating === '6' ? 'selected' : ''}>6/10</option>
-                                        <option value="5" ${item.rating === '5' ? 'selected' : ''}>5/10</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2">
-                                <input type="number" id="edit-current-${item.id}" value="${item.currentEp}" placeholder="Current Ep" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-center text-white">
-                                <input type="number" id="edit-total-${item.id}" value="${item.totalEp}" placeholder="Total Eps" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-center text-white">
-                            </div>
-
-                            <input type="url" id="edit-img-${item.id}" value="${item.imgUrl}" placeholder="Image Poster URL" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-xs text-white">
-                            <input type="url" id="edit-stream-${item.id}" value="${item.streamUrl}" placeholder="Streaming Link URL" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-xs text-white">
-                            
-                            <div class="flex gap-2 pt-2">
-                                <button onclick="saveInlineEdit(${item.id})" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 py-2 rounded-xl text-xs font-bold text-white transition cursor-pointer">Save Changes</button>
-                                <button onclick="toggleEdit(${item.id})" class="w-1/2 bg-gray-700 hover:bg-gray-600 py-2 rounded-xl text-xs font-bold text-white transition cursor-pointer">Cancel</button>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    const streamBtn = item.streamUrl 
-                        ? `<a href="${item.streamUrl}" target="_blank" class="flex items-center justify-center gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 px-3 rounded-lg transition"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Stream</a>` 
-                        : '';
-
-                    const imgHeader = item.imgUrl 
-                        ? `<div class="w-full h-96 bg-black/40 rounded-xl overflow-hidden mb-4 border border-gray-700/20 shadow-inner flex items-center justify-center">
-                             <img src="${item.imgUrl}" alt="Poster" class="max-w-full max-h-full object-contain">
-                           </div>` 
-                        : `<div class="w-full h-40 bg-gray-800/40 rounded-xl mb-4 border border-dashed border-gray-700 flex flex-col items-center justify-center opacity-40"><i data-lucide="image" class="mb-1 w-5 h-5"></i><span class="text-[10px]">No Poster URL linked. Click Edit.</span></div>`;
-
-                    card.innerHTML = `
-                        <div>
-                            <div class="flex justify-between items-start gap-2 mb-3">
-                                <span class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${badgeColor}">${item.status}</span>
-                                <div class="flex gap-1">
-                                    <button onclick="toggleEdit(${item.id})" class="text-gray-500 hover:text-indigo-400 transition cursor-pointer p-1" title="Edit Card"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-                                    <button onclick="deleteDrama(${item.id})" class="text-gray-500 hover:text-rose-400 transition cursor-pointer p-1" title="Delete Card"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-                                </div>
-                            </div>
-                            
-                            ${imgHeader}
-
-                            <h3 class="text-lg font-bold tracking-tight text-white mb-1 line-clamp-1">${item.title}</h3>
-                            <p class="text-xs opacity-60 flex items-center gap-1 mb-4"><i data-lucide="tag" class="w-3 h-3"></i> ${item.genre}</p>
-                            
-                            <div class="bg-black/20 p-3 rounded-xl border border-gray-700/10 flex items-center justify-between mb-4">
-                                <span class="text-xs opacity-70 font-medium">Binge Timeline:</span>
-                                <div class="flex items-center gap-3">
-                                    <button onclick="adjustEpisode(${item.id}, -1)" class="w-7 h-7 bg-gray-800 text-white rounded-lg flex items-center justify-center hover:bg-gray-700 font-bold cursor-pointer transition text-sm">-</button>
-                                    <span class="font-mono font-bold text-sm text-indigo-300">${item.currentEp} / ${item.totalEp}</span>
-                                    <button onclick="adjustEpisode(${item.id}, 1)" class="w-7 h-7 bg-gray-800 text-white rounded-lg flex items-center justify-center hover:bg-gray-700 font-bold cursor-pointer transition text-sm">+</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between mt-2 border-t border-gray-700/20 pt-3">
-                            <div class="text-amber-400 text-sm font-bold flex items-center gap-1">
-                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i> ${item.rating}/10
-                            </div>
-                            ${streamBtn}
-                        </div>
-                    `;
-                }
-                grid.appendChild(card);
-            });
-            lucide.createIcons();
-        }
-
-        const activeTheme = localStorage.getItem('appTheme') || 'night';
-        setTheme(activeTheme);
-        renderDashboard();
-    </script>
-</body>
-</html>
+            { id: 65, title: "Eternal Love (2017)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 58, totalEp: 58, rating: "10", imgUrl: "https://i.pinimg.com/736x/4f/5f/a7/4f5fa7b79b1f3011b0e5651eab18dd50.jpg", streamUrl: "https://www.netflix.com/" },
+            { id: 66, title: "Eternal Love of Dream (2020)", genre: "Xianxia, Fantasy, Romance, Historical, Drama", status: "Completed", currentEp: 56, totalEp: 56, rating: "10",
