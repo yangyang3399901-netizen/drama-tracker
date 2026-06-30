@@ -3,10 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Link to our Mobile App blueprint -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    
     <link class="rounded-full" rel="icon" type="image/jpeg" href="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=256&h=256&fit=crop">
     <title>Drama Watchlist Tracker (Pro)</title>
+    
+    <!-- Tailwind CSS for sleek styling -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         body { transition: background-color 0.3s, color 0.3s; }
         .theme-night { --bg: #111827; --card: #1f2937; --text: #f9fafb; --accent: #6366f1; }
@@ -17,7 +26,7 @@
 <body class="theme-night bg-[var(--bg)] text-[var(--text)] min-h-screen p-4 md:p-8 flex flex-col justify-between">
 
     <div class="max-w-6xl mx-auto w-full">
-        <!-- HEADER -->
+        <!-- HEADER & TOOLBAR -->
         <header class="flex flex-col lg:flex-row justify-between items-center mb-8 gap-4 border-b border-gray-700 pb-4">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight flex items-center gap-2">
@@ -26,7 +35,9 @@
                 <p class="text-sm opacity-70 mt-1">Your ultimate binge companion</p>
             </div>
             
+            <!-- Controls Toolbar (Themes + Data Backup) -->
             <div class="flex flex-wrap gap-3 justify-center items-center">
+                <!-- Data Backup Utilities -->
                 <div class="flex gap-2 bg-gray-800/40 p-1.5 rounded-xl border border-gray-700">
                     <button onclick="downloadBackup()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-700/60 hover:bg-gray-600 text-indigo-300 cursor-pointer transition">
                         <i data-lucide="download" class="w-3.5 h-3.5"></i> Backup
@@ -36,15 +47,17 @@
                         <input type="file" id="upload-file" accept=".json" onchange="uploadBackup(event)" class="hidden">
                     </label>
                 </div>
+
+                <!-- Theme Changer Buttons -->
                 <div class="flex gap-2 bg-gray-800/50 p-1.5 rounded-xl border border-gray-700">
-                    <button onclick="setTheme('night')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">🌌 Night</button>
-                    <button onclick="setTheme('pastel')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">🌸 Pastel</button>
-                    <button onclick="setTheme('cyber')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">⚡ Cyber</button>
+                    <button onclick="setTheme('night')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">ðŸŒŒ Night</button>
+                    <button onclick="setTheme('pastel')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">ðŸŒ¸ Pastel</button>
+                    <button onclick="setTheme('cyber')" class="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer hover:bg-gray-700 transition">âš¡ Cyber</button>
                 </div>
             </div>
         </header>
 
-        <!-- STATISTICS -->
+        <!-- GLOBAL STATISTICS BANNER -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-[var(--card)] p-4 rounded-2xl border border-gray-700/30 flex items-center gap-3 shadow-sm">
                 <div class="p-3 bg-blue-500/10 text-blue-400 rounded-xl"><i data-lucide="clapperboard"></i></div>
@@ -76,138 +89,1313 @@
             </div>
         </section>
 
-        <!-- ADD FORM -->
+        <!-- ADD NEW DRAMA FORM -->
         <section class="bg-[var(--card)] p-6 rounded-2xl border border-gray-700/30 mb-8 shadow-xl">
             <h2 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="plus-circle" class="text-indigo-400"></i> Track a New Series</h2>
             <form id="drama-form" onsubmit="addDrama(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" id="title" placeholder="Drama Title" required class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-full">
-                <input type="text" id="genre" placeholder="Genre" required class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-full">
-                <select id="status" class="bg-[var(--bg)] border border-gray-700/50 p-3 rounded-xl text-sm w-full">
-                    <option value="Watching">🎬 Currently Watching</option>
-                    <option value="Plan to Watch">⏳ Plan to Watch</option>
-                    <option value="Completed" selected>✅ Completed</option>
-                    <option value="Dropped">🗑️ Dropped</option>
+                <input type="text" id="title" placeholder="Drama Title (e.g., Crash Landing on You)" required class="bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
+                <input type="text" id="genre" placeholder="Genre (e.g., Romance, Thriller)" required class="bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
+                
+                <select id="status" class="bg-[var(--bg)] border border-gray-700/50 p-3 rounded-xl text-sm focus:outline-none w-full">
+                    <option value="Watching">ðŸŽ¬ Currently Watching</option>
+                    <option value="Plan to Watch">â³ Plan to Watch</option>
+                    <option value="Completed">âœ… Completed</option>
+                    <option value="Dropped">ðŸ—‘ï¸ Dropped</option>
                 </select>
+                
                 <div class="flex gap-2">
-                    <input type="number" id="current-ep" placeholder="Current Ep" min="0" value="16" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-1/2 text-center">
+                    <input type="number" id="current-ep" placeholder="Current Ep" min="0" value="0" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-1/2 text-center">
                     <input type="number" id="total-ep" placeholder="Total Eps" min="1" value="16" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-1/2 text-center">
                 </div>
-                <select id="rating" class="bg-[var(--bg)] border border-gray-700/50 p-3 rounded-xl text-sm w-full">
-                    <option value="10">⭐ 10/10 Masterpiece</option>
-                    <option value="9">⭐ 9/10 Amazing</option>
+
+                <select id="rating" class="bg-[var(--bg)] border border-gray-700/50 p-3 rounded-xl text-sm focus:outline-none w-full">
+                    <option value="10">â­ 10/10 Masterpiece</option>
+                    <option value="9">â­ 9/10 Amazing</option>
+                    <option value="8">â­ 8/10 Really Good</option>
+                    <option value="7">â­ 7/10 Good</option>
+                    <option value="6">â­ 6/10 Okay</option>
+                    <option value="5">â­ 5/10 Bad</option>
                 </select>
-                <input type="url" id="img-url" placeholder="Poster Image URL" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-full">
-                <input type="url" id="stream-url" placeholder="Streaming URL Link" class="md:col-span-3 bg-black/20 border border-gray-700/50 p-3 rounded-xl text-sm w-full">
-                <button type="submit" class="md:col-span-3 bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl transition text-white cursor-pointer shadow-lg">Save to My Dashboard</button>
+
+                <input type="url" id="img-url" placeholder="Drama Poster Image URL (Optional)" class="bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
+
+                <input type="url" id="stream-url" placeholder="Streaming URL Link (Netflix, Viki, etc.)" class="md:col-span-3 bg-black/20 border border-gray-700/50 p-3 rounded-xl focus:outline-none focus:border-indigo-500 text-sm w-full">
+
+                <button type="submit" class="md:col-span-3 bg-indigo-600 hover:bg-indigo-500 font-bold py-3 rounded-xl transition text-white cursor-pointer shadow-lg shadow-indigo-600/20">Save to My Dashboard</button>
             </form>
         </section>
 
-        <!-- GRID -->
+        <!-- DASHBOARD GRID DISPLAY -->
         <main class="mb-12">
-            <h2 class="text-xl font-black mb-4 flex items-center gap-2"><i data-lucide="layout-grid" class="text-emerald-400"></i> Active Monitor Watchlist</h2>
-            <div id="watchlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-4">
+                <div>
+                    <h2 class="text-xl font-black flex items-center gap-2"><i data-lucide="layout-grid" class="text-emerald-400"></i> Active Monitor Watchlist</h2>
+                    <p id="result-count" class="text-xs opacity-60 mt-1">Showing every saved series</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full lg:w-auto">
+                    <div class="relative">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 opacity-50"></i>
+                        <input type="search" id="search-input" oninput="renderDashboard()" placeholder="Search title or genre" class="w-full sm:w-64 bg-[var(--card)] border border-gray-700/50 pl-9 pr-3 py-2.5 rounded-xl text-sm focus:outline-none focus:border-indigo-500">
+                    </div>
+                    <select id="status-filter" onchange="renderDashboard()" class="bg-[var(--card)] border border-gray-700/50 px-3 py-2.5 rounded-xl text-sm focus:outline-none">
+                        <option value="All">All Statuses</option>
+                        <option value="Watching">Watching</option>
+                        <option value="Plan to Watch">Plan to Watch</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Dropped">Dropped</option>
+                    </select>
+                    <select id="sort-filter" onchange="renderDashboard()" class="bg-[var(--card)] border border-gray-700/50 px-3 py-2.5 rounded-xl text-sm focus:outline-none">
+                        <option value="year-oldest">Sort: Year Oldest</option>
+                        <option value="year-newest">Sort: Year Newest</option>
+                        <option value="status">Sort: Status</option>
+                        <option value="title">Sort: Title</option>
+                        <option value="rating">Sort: Rating</option>
+                        <option value="progress">Sort: Progress</option>
+                    </select>
+                </div>
+            </div>
+            <div id="watchlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Javascript populates cards here automatically -->
+            </div>
         </main>
     </div>
 
-    <!-- FOOTER -->
+    <!-- FOOTER SIGNATURE -->
     <footer class="w-full text-center py-6 border-t border-gray-800/40 opacity-60 text-xs tracking-wide">
         <p class="flex items-center justify-center gap-1">
-            <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-400"></i> Created by: <span class="font-bold text-white opacity-90">Alnea Rodrigo Lenizo</span>
+            <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-400"></i> 
+            Created by: <span class="font-bold text-white opacity-90">Alnea Rodrigo Lenizo</span>
         </p>
     </footer>
 
+    <!-- APP ENGINE SCRIPT -->
     <script>
+        // Database Layout
         const PUBLIC_SHOWCASE_DRAMAS = [
-            { id: 1, title: "Crash Landing on You (2019)", genre: "Romance, Romantic Comedy, Military, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/8/8c/Crash_Landing_on_You_main_poster.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 2, title: "Goblin (2016)", genre: "Romance, Fantasy, Supernatural, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/08/Guardian_The_Lonely_and_Great_God.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 3, title: "Business Proposal (2022)", genre: "Romance, Romantic Comedy, Workplace, Drama", status: "Completed", currentEp: 12, totalEp: 12, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/0f/Business_Proposal.jpeg", streamUrl: "https://www.netflix.com/" },
-            { id: 4, title: "Hometown Cha-Cha-Cha (2021)", genre: "Romance, Romantic Comedy, Slice of Life, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/3/34/Hometown_Cha-Cha-Cha.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 5, title: "Weightlifting Fairy Kim Bok-joo (2016)", genre: "Romance, Youth, Sports, Coming-of-Age, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/5/59/Weightlifting_Fairy_Kim_Bok-joo.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 6, title: "It's Okay to Not Be Okay (2020)", genre: "Romance, Psychological, Healing, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/3/32/It%27s_Okay_to_Not_Be_Okay.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 7, title: "True Beauty (2020)", genre: "Romance, Youth, School, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/e/e9/True_Beauty_TV_series.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 8, title: "Who Are You: School 2015 (2015)", genre: "Youth, School, Romance, Mystery, Coming-of-Age, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/6/65/Who_Are_You_School_2015.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 9, title: "Weak Hero Class 1 (2022)", genre: "Action, Youth, School, Thriller, Drama", status: "Completed", currentEp: 8, totalEp: 8, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/4/4b/Weak_Hero_Class_1.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 10, title: "Weak Hero Class 2 (2025)", genre: "Action, Youth, School, Thriller, Drama", status: "Completed", currentEp: 8, totalEp: 8, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/7/7a/Weak_Hero_Class_2.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 11, title: "Mr. Queen (2020)", genre: "Historical, Romance, Romantic Comedy, Fantasy, Body-Swap, Drama", status: "Completed", currentEp: 20, totalEp: 20, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/01/Mr._Queen_poster.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 12, title: "Love Alarm (2019)", genre: "Romance, School, Youth, Drama", status: "Completed", currentEp: 14, totalEp: 14, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/e/e0/Love_Alarm.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 13, title: "Start-Up (2020)", genre: "Romance, Business, Youth, Comedy, Slice of Life, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/00/Start-Up_%28South_Korean_TV_series%29.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 14, title: "Our Beloved Summer (2021)", genre: "Romance, Youth, Coming-of-Age, Slice of Life, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/e/e5/Our_Beloved_Summer.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 15, title: "What's Wrong with Secretary Kim (2018)", genre: "Workplace, Romance, Romantic Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/97/What%27s_Wrong_with_Secretary_Kim.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 16, title: "Strong Woman Do Bong-soon (2017)", genre: "Romance, Romantic Comedy, Fantasy, Action, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/9e/Strong_Woman_Do_Bong-soon.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 17, title: "Fight for My Way (2017)", genre: "Romance, Youth, Friendship, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/95/Fight_for_My_Way.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 18, title: "Descendants of the Sun (2016)", genre: "Romance, Military, Medical, Action, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/91/Descendants_of_the_Sun.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 19, title: "Doom at Your Service (2021)", genre: "Romance, Fantasy, Supernatural, Melodrama, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/7/79/Doom_at_Your_Service.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 20, title: "My Lovely Liar (2023)", genre: "Romance, Mystery, Fantasy, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/8/84/My_Lovely_Liar.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 21, title: "Tale of the Nine-Tailed (2020)", genre: "Romance, Fantasy, Supernatural, Action, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/5/59/Tale_of_the_Nine_Tailed.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 22, title: "Tale of the Nine-Tailed 1938 (2023)", genre: "Fantasy, Action, Historical, Supernatural, Drama", status: "Completed", currentEp: 12, totalEp: 12, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/6/6c/Tale_of_the_Nine-Tailed_1938.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 23, title: "While You Were Sleeping (2017)", genre: "Romance, Fantasy, Mystery, Legal, Thriller, Drama", status: "Completed", currentEp: 32, totalEp: 32, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/f/f4/While_You_Were_Sleeping_%28TV_series%29.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 24, title: "W: Two Worlds (2016)", genre: "Romance, Fantasy, Mystery, Thriller, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/97/W_Two_Worlds.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 25, title: "Happiness (2021)", genre: "Thriller, Action, Fantasy, Survival, Drama", status: "Completed", currentEp: 12, totalEp: 12, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/a/a2/Happiness_%28South_Korean_TV_series%29.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 26, title: "Sh**ting Stars (2022)", genre: "Romance, Romantic Comedy, Workplace, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/5/53/Shooting_Stars_%28South_Korean_TV_series%29.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 27, title: "Snowdrop (2021)", genre: "Romance, Melodrama, Historical, Political, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/95/Snowdrop_%28South_Korean_TV_series%29.jpg", streamUrl: "https://www.disneyplus.com/" },
-            { id: 28, title: "Welcome to Samdal-ri (2023)", genre: "Romance, Slice of Life, Healing, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/8/8d/Welcome_to_Samdal-ri.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 29, title: "The Forbidden Marriage (2022)", genre: "Historical, Romance, Comedy, Mystery, Drama", status: "Completed", currentEp: 12, totalEp: 12, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/2/2c/The_Forbidden_Marriage.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 30, title: "River Where the Moon Rises (2021)", genre: "Historical, Romance, Action, Political, Drama", status: "Completed", currentEp: 20, totalEp: 20, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/2/24/River_Where_the_Moon_Rises.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 31, title: "Arthdal Chronicles (2019)", genre: "Fantasy, Historical, Action, Adventure, Drama", status: "Completed", currentEp: 18, totalEp: 18, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/8/89/Arthdal_Chronicles.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 32, title: "Itaewon Class (2020)", genre: "Business, Romance, Youth, Slice of Life, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/08/Itaewon_Class.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 33, title: "My ID Is Gangnam Beauty (2018)", genre: "Romance, Youth, School, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/6/68/My_ID_Is_Gangnam_Beauty.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 34, title: "Legend of the Blue Sea (2016)", genre: "Romance, Fantasy, Comedy, Drama", status: "Completed", currentEp: 20, totalEp: 20, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/9/92/Legend_of_the_Blue_Sea.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 35, title: "My Love from the Star (2013)", genre: "Romance, Fantasy, Comedy, Drama", status: "Completed", currentEp: 21, totalEp: 21, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/3/3b/My_Love_from_the_Star.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 36, title: "Boys Over Flowers (2009)", genre: "Romance, School, Youth, Comedy, Drama", status: "Completed", currentEp: 25, totalEp: 25, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/7/74/Boys_Over_Flowers_2009.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 37, title: "Playful Kiss (2010)", genre: "Romance, School, Youth, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/e/e0/Playful_Kiss.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 38, title: "The Heirs (2013)", genre: "Romance, School, Youth, Drama", status: "Completed", currentEp: 20, totalEp: 20, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/3/35/The_Heirs.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 39, title: "School 2013 (2012)", genre: "School, Youth, Friendship, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/4/43/School_2013.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 40, title: "School 2017 (2017)", genre: "School, Youth, Romance, Comedy, Drama", status: "Completed", currentEp: 16, totalEp: 16, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/8/8e/School_2017.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 41, title: "Hidden Love (2023)", genre: "Romance, Youth, Coming-of-Age, Family, Slice of Life, Drama", status: "Completed", currentEp: 25, totalEp: 25, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/5/5c/Hidden_Love_%28TV_series%29.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 42, title: "Go Ahead (2020)", genre: "Romance, Youth, Family, Friendship, Slice of Life, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/3/39/Go_Ahead_%28TV_series%29.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 43, title: "A Love So Beautiful (2017)", genre: "Romance, Youth, School, Coming-of-Age, Comedy, Drama", status: "Completed", currentEp: 23, totalEp: 23, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/0f/A_Love_So_Beautiful_%28TV_series%29.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 44, title: "Put Your Head on My Shoulder (2019)", genre: "Romance, Youth, College, Gaming, Comedy, Slice of Life, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/c/c8/Put_Your_Head_on_My_Shoulder.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 45, title: "Unforgettable Love (2021)", genre: "Romance, Comedy, Family, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://i.mydramalist.com/2wJ7J_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 46, title: "You Are My Glory (2021)", genre: "Romance, Workplace, Slice of Life, Drama", status: "Completed", currentEp: 32, totalEp: 32, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/e/e5/You_Are_My_Glory.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 47, title: "Falling Into Your Smile (2021)", genre: "Romance, Esports, Youth, Comedy, Drama", status: "Completed", currentEp: 31, totalEp: 31, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/5/53/Falling_Into_Your_Smile.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 48, title: "Love O2O (2016)", genre: "Romance, Youth, College, Gaming, Comedy, Drama", status: "Completed", currentEp: 30, totalEp: 30, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/7/7f/Love_O2O_%28TV_series%29.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 49, title: "Lighter and Princess (2022)", genre: "Romance, Youth, School, Coming-of-Age, Drama", status: "Completed", currentEp: 36, totalEp: 36, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/6/6c/Lighter_%26_Princess.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 50, title: "Dating in the Kitchen (2020)", genre: "Romance, Comedy, Food, Workplace, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/4/4f/Dating_in_the_Kitchen.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 51, title: "You Are My Hero (2021)", genre: "Romance, Medical, Military, Action, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/7/75/You_Are_My_Hero_%28TV_series%29.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 52, title: "Perfect and Casual (2020)", genre: "Romance, Contract Relationship, Comedy, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://i.mydramalist.com/6L3x6_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 53, title: "The Oath of Love (2022)", genre: "Romance, Medical, Family, Drama", status: "Completed", currentEp: 29, totalEp: 29, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/08/The_Oath_of_Love.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 54, title: "Love Like the Galaxy (2022)", genre: "Romance, Historical, Family, Political, Drama", status: "Completed", currentEp: 56, totalEp: 56, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/0/0c/Love_Like_the_Galaxy.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 55, title: "Who Rules the World (2022)", genre: "Romance, Wuxia, Historical, Political, Adventure, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://upload.wikimedia.org/wikipedia/en/7/78/Who_Rules_the_World.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 56, title: "The Long Ballad (2021)", genre: "Romance, Historical, Political, Action, Drama", status: "Completed", currentEp: 49, totalEp: 49, rating: "10", imgUrl: "https://i.mydramalist.com/Xw7mY_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 57, title: "Rebirth for You (2021)", genre: "Romance, Historical, Costume, Political, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.pinimg.com/736x/bb/92/19/bb9219c16e606491dcbc044abb48c1f6.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 58, title: "Princess Agents (2017)", genre: "Romance, Historical, Wuxia, Action, Political, Drama", status: "Completed", currentEp: 67, totalEp: 67, rating: "10", imgUrl: "https://i.pinimg.com/736x/2b/f0/4e/2bf04e5d1b782a3e8254936d85eac59e.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 59, title: "Legend of Fei (2020)", genre: "Romance, Wuxia, Historical, Adventure, Drama", status: "Completed", currentEp: 51, totalEp: 51, rating: "10", imgUrl: "https://i.pinimg.com/736x/00/96/86/00968637b78ca21823ab6e9defd068a2.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 60, title: "Story of Kunning Palace (2023)", genre: "Romance, Historical, Political, Mystery, Drama", status: "Completed", currentEp: 38, totalEp: 38, rating: "10", imgUrl: "https://i.mydramalist.com/XV5yq_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 61, title: "A Journey to Love (2023)", genre: "Romance, Wuxia, Historical, Adventure, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.mydramalist.com/6LxVj_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 62, title: "The Legend of Shen Li (2024)", genre: "Xianxia, Romance, Fantasy, Adventure, Drama", status: "Completed", currentEp: 39, totalEp: 39, rating: "10", imgUrl: "https://i.pinimg.com/736x/7c/f0/59/7cf0597758a604853d37a7f610ea3e30.jpg", streamUrl: "https://wetv.vip/" },
-            { id: 63, title: "The Rebel Princess (2021)", genre: "Romance, Historical, Political, Drama", status: "Completed", currentEp: 68, totalEp: 68, rating: "10", imgUrl: "https://i.mydramalist.com/6L3x6_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 64, title: "The Sword and the Brocade (2021)", genre: "Romance, Historical, Family, Drama", status: "Completed", currentEp: 45, totalEp: 45, rating: "10", imgUrl: "https://i.mydramalist.com/2wJ7J_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 65, title: "Eternal Love (2017)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 58, totalEp: 58, rating: "10", imgUrl: "https://i.pinimg.com/736x/4f/5f/a7/4f5fa7b79b1f3011b0e5651eab18dd50.jpg", streamUrl: "https://www.netflix.com/" },
-            { id: 66, title: "Eternal Love of Dream (2020)", genre: "Xianxia, Fantasy, Romance, Historical, Drama", status: "Completed", currentEp: 56, totalEp: 56, rating: "10", imgUrl: "https://i.pinimg.com/736x/43/31/40/4331400018c544ae71d77d0b787c1bc4.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 67, title: "Ashes of Love (2018)", genre: "Romance, Xianxia, Fantasy, Historical, Adventure, Drama", status: "Completed", currentEp: 63, totalEp: 63, rating: "10", imgUrl: "https://i.pinimg.com/736x/91/9c/3a/919c3a2f40b38e34e069f7b350693b72.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 68, title: "Love and Redemption (2020)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 59, totalEp: 59, rating: "10", imgUrl: "https://i.mydramalist.com/6LxVj_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 69, title: "Ancient Love Poetry (2021)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 49, totalEp: 49, rating: "10", imgUrl: "https://i.mydramalist.com/XV5yq_4f.jpg", streamUrl: "https://wetv.vip/" },
-            { id: 70, title: "The Last Immortal (2023)", genre: "Romance, Xianxia, Fantasy, Adventure, Historical, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.pinimg.com/736x/08/56/ab/0856ab1445220b49312b2a02101ffb97.jpg", streamUrl: "https://wetv.vip/" },
-            { id: 71, title: "Immortal Samsara (2022)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 38, totalEp: 38, rating: "10", imgUrl: "https://i.pinimg.com/736x/de/9d/6f/de9d6f90538a3a45d6f07d559523a440.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 72, title: "Beauty of Resilience (2023)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 36, totalEp: 36, rating: "10", imgUrl: "https://i.pinimg.com/736x/31/73/cd/3173cdf9bea165b8dbd579fd4ad41747.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 73, title: "Till the End of the Moon (2023)", genre: "Romance, Xianxia, Fantasy, Historical, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.mydramalist.com/2wJ7J_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 74, title: "Love of a Thousand Years (2020)", genre: "Romance, Fantasy, Historical, Xianxia, Drama", status: "Completed", currentEp: 30, totalEp: 30, rating: "10", imgUrl: "https://i.pinimg.com/736x/d8/12/ac/d812ac7603cd7535b94c933c7bc9d509.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 75, title: "The Legends (2019)", genre: "Romance, Fantasy, Wuxia, Historical, Drama", status: "Completed", currentEp: 55, totalEp: 55, rating: "10", imgUrl: "https://i.mydramalist.com/Xw7mY_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 76, title: "Novoland: Pearl Eclipse (2021)", genre: "Romance, Fantasy, Historical, Political, Drama", status: "Completed", currentEp: 48, totalEp: 48, rating: "10", imgUrl: "https://i.mydramalist.com/XV5yq_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 77, title: "Legend of Yunxi (2018)", genre: "Romance, Historical, Costume, Political, Drama", status: "Completed", currentEp: 48, totalEp: 48, rating: "10", imgUrl: "https://i.pinimg.com/736x/c6/7f/53/c67f530a606aec53cda25c1e5af62419.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 78, title: "The Blooms at Ruyi Pavilion (2020)", genre: "Romance, Historical, Costume, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.mydramalist.com/6LxVj_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 79, title: "General's Lady (2020)", genre: "Romance, Historical, Comedy, Drama", status: "Completed", currentEp: 30, totalEp: 30, rating: "10", imgUrl: "https://i.mydramalist.com/6L3x6_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 80, title: "Romance of Tiger and Rose (2020)", genre: "Romance, Comedy, Fantasy, Historical, Drama", status: "Completed", currentEp: 24, totalEp: 24, rating: "10", imgUrl: "https://i.pinimg.com/736x/ed/53/71/ed5371e18e44eee82c223ced5811dbca.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 81, title: "Love Better Than Immortality (2019)", genre: "Romance, Fantasy, Historical, Comedy, Drama", status: "Completed", currentEp: 40, totalEp: 40, rating: "10", imgUrl: "https://i.mydramalist.com/2wJ7J_4f.jpg", streamUrl: "https://www.viki.com/" },
-            { id: 82, title: "Under the Power (2019)", genre: "Romance, Historical, Mystery, Wuxia, Drama", status: "Completed", currentEp: 55, totalEp: 55, rating: "10", imgUrl: "https://i.mydramalist.com/Xw7mY_4f.jpg", streamUrl: "https://www.viki.com/" }
-        ];
+            {
+                        "id": 1,
+                        "title": "Business Proposal (2022)",
+                        "genre": "Romance, Romantic Comedy, Workplace, Drama",
+                        "status": "Completed",
+                        "currentEp": 12,
+                        "totalEp": 12,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/ae/42/55/ae42558018223c2295f694efba6fb898.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 2,
+                        "title": "Weightlifting Fairy Kim Bok-joo (2016)",
+                        "genre": "Romance, Youth, Sports, Coming-of-Age, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/7b/de/78/7bde78ca4397f908c07006232bb9b0d6.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 3,
+                        "title": "It's Okay to Not Be Okay (2020)",
+                        "genre": "Romance, Psychological, Healing, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/19/72/4e/19724e63d3e554a89e9ace6d493f8718.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 4,
+                        "title": "True Beauty (2020)",
+                        "genre": "Romance, Youth, School, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/f5/60/b9/f560b9a981f1eb88a5348fbd63a1a9bc.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 5,
+                        "title": "Who Are You: School 2015 (2015)",
+                        "genre": "Youth, School, Romance, Mystery, Coming-of-Age, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/f5/b8/56/f5b85660184d8ab07062758a59c53c10.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 6,
+                        "title": "Weak Hero Class 1 (2022)",
+                        "genre": "Action, Youth, School, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 8,
+                        "totalEp": 8,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/5e/57/5b/5e575b3a97a3e175fa434b8ba0832993.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 7,
+                        "title": "Weak Hero Class 2 (2025)",
+                        "genre": "Action, Youth, School, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 8,
+                        "totalEp": 8,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/eb/b8/39/ebb839108e13665e41091e422488e5e0.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 8,
+                        "title": "Mr. Queen (2020)\n20 episodes\nGenre: Historical, Romance, Romantic Comedy, Fantasy, Body-Swap, Drama\nWhere to watch: https://www.viki.com/\nImage URL: https://i.pinimg.com/736x/2d/ce/15/2dce159d667cc350b784f3b02df3a4e9.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 9,
+                        "title": "Love Alarm (2019)\n14 episodes\nGenre: Romance, School, Youth, Drama\nWhere to watch: https://www.netflix.com/\nImage URL: https://i.pinimg.com/1200x/cd/5a/84/cd5a8428568028271eb4f3287985e15f.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 10,
+                        "title": "Our Beloved Summer (2021)\n16 episodes\nGenre: Romance, Youth, Coming-of-Age, Slice of Life, Drama\nWhere to watch: https://www.netflix.com/\nImage URL: https://i.pinimg.com/736x/64/43/ca/6443caa3ae48b0875e9375c524b621a9.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 11,
+                        "title": "What's Wrong with Secretary Kim (2018)\n16 episodes\nGenre: Workplace, Romance, Romantic Comedy, Drama\nWhere to watch: https://www.viki.com/\nImage URL: https://i.pinimg.com/1200x/0b/44/cd/0b44cdf4682947e80bf8aca6ce9b529c.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 12,
+                        "title": "Strong Woman Do Bong-soon (2017)\n16 episodes\nGenre: Romance, Romantic Comedy, Fantasy, Action, Drama\nWhere to watch: https://www.viki.com/\nImage URL: https://i.pinimg.com/1200x/29/c8/2b/29c82bcd55a18b7fe3dc8815e8550675.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 13,
+                        "title": "Fight for My Way (2017)\n16 episodes\nGenre: Romance, Youth, Friendship, Comedy, Drama\nWhere to watch: https://www.viki.com/\nImage URL: https://i.pinimg.com/736x/61/a7/2f/61a72f7b1d8811ff6573b8c61f7562a7.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 14,
+                        "title": "Descendants of the Sun (2016)\n16 episodes\nGenre: Romance, Military, Medical, Action, Drama\nWhere to watch: https://www.viki.com/\nImage URL: https://i.pinimg.com/736x/77/ef/36/77ef3676e9b3b5947b4cb997243c567a.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 15,
+                        "title": "Doom at Your Service (2021)\n16 episodes\nGenre: Romance, Fantasy, Supernatural, Melodrama, Drama\nWhere to watch: https://www.viki.com/\nImage URL: https://i.pinimg.com/1200x/2a/88/15/2a8815c256d64a5d6df1413b1161b3de.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 16,
+                        "title": "My Lovely Liar (2023)\n16 episodes\nGenre: Romance, Mystery, Fantasy, Comedy, Drama\nWhere to watch: https://www.viki.com/\nImage URL: https://i.pinimg.com/736x/bc/cd/e9/bccde9afe5d5bf3ee569292310c25537.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 17,
+                        "title": "Tale of the Nine-Tailed (2020)\n16 episodes\nGenre: Romance, Fantasy, Supernatural, Action, Drama\nWhere to watch: https://www.netflix.com/\nImage URL: https://i.pinimg.com/736x/40/ff/d7/40ffd75fd61a4623d77fe48e83fae212.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 18,
+                        "title": "While You Were Sleeping (2017)\n32 episodes\nGenre: Romance, Fantasy, Mystery, Legal, Thriller, Drama\nWhere to watch: https://www.viki.com/\nImage URL: https://i.pinimg.com/736x/0f/ec/ca/0fecca1a6cff425ba385ae98bac3e125.jpg",
+                        "genre": "Drama",
+                        "status": "Completed",
+                        "currentEp": 0,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "",
+                        "streamUrl": "",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 19,
+                        "title": "W: Two Worlds (2016)",
+                        "genre": "Romance, Fantasy, Mystery, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/4e/1a/43/4e1a43a0936f1b0c0c8922da3efe8add.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 20,
+                        "title": "Happiness (2021)",
+                        "genre": "Thriller, Action, Fantasy, Survival, Drama",
+                        "status": "Completed",
+                        "currentEp": 12,
+                        "totalEp": 12,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/1b/3b/a3/1b3ba39365b662df9cb9a6a471966305.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 21,
+                        "title": "Shooting Stars (2022)",
+                        "genre": "Romance, Romantic Comedy, Workplace, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/ec/f9/29/ecf92989dc39672148a388eeb93b4019.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 22,
+                        "title": "Snowdrop (2021)",
+                        "genre": "Romance, Melodrama, Historical, Political, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/6d/c5/e4/6dc5e44dbe075ba92a2da30284a45189.jpg",
+                        "streamUrl": "https://www.disneyplus.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 23,
+                        "title": "The Forbidden Marriage (2022)",
+                        "genre": "Historical, Romance, Comedy, Mystery, Drama",
+                        "status": "Completed",
+                        "currentEp": 12,
+                        "totalEp": 12,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/ec/f9/fc/ecf9fce361315f65e9d0f0884d02ac50.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 24,
+                        "title": "Arthdal Chronicles (2019)",
+                        "genre": "Fantasy, Historical, Action, Adventure, Drama",
+                        "status": "Completed",
+                        "currentEp": 18,
+                        "totalEp": 18,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/a9/06/b7/a906b71a807e677c61ff575803d9f224.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 25,
+                        "title": "My ID Is Gangnam Beauty (2018)",
+                        "genre": "Romance, Youth, School, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/f6/6b/b2/f66bb29df75805f8660ec4997b53cf73.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 26,
+                        "title": "Legend of the Blue Sea (2016)",
+                        "genre": "Romance, Fantasy, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 20,
+                        "totalEp": 20,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/71/2f/4b/712f4b25ff306057a8246d176ea27ac4.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 27,
+                        "title": "My Love from the Star (2013)",
+                        "genre": "Romance, Fantasy, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 21,
+                        "totalEp": 21,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/c4/5e/50/c45e50409d1640df4bb2cc7aaeb8b846.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 28,
+                        "title": "Boys Over Flowers (2009)",
+                        "genre": "Romance, School, Youth, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 25,
+                        "totalEp": 25,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/c3/9a/0b/c39a0ba80dfdc65ccb5fbd039d32df69.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 29,
+                        "title": "Playful Kiss (2010)",
+                        "genre": "Romance, School, Youth, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/46/ac/48/46ac486ea2c79699ffe6fd6df3a48003.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 30,
+                        "title": "The Heirs (2013)",
+                        "genre": "Romance, School, Youth, Drama",
+                        "status": "Completed",
+                        "currentEp": 20,
+                        "totalEp": 20,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/91/0d/99/910d99fecf0102e7992549c9272e4c5b.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 31,
+                        "title": "School 2013 (2012)",
+                        "genre": "School, Youth, Friendship, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/a3/02/7c/a3027ccc74aa97e698951288f2f89c9d.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 32,
+                        "title": "School 2017 (2017)",
+                        "genre": "School, Youth, Romance, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/3f/cc/2e/3fcc2eb00bd436f3499c76b290a72a55.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 33,
+                        "title": "Hidden Love (2023)",
+                        "genre": "Romance, Youth, Coming-of-Age, Family, Slice of Life, Drama",
+                        "status": "Completed",
+                        "currentEp": 25,
+                        "totalEp": 25,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/9b/37/4f/9b374fe211166f9367d774429a79d89e.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 34,
+                        "title": "Go Ahead (2020)",
+                        "genre": "Romance, Youth, Family, Friendship, Slice of Life, Drama",
+                        "status": "Completed",
+                        "currentEp": 40,
+                        "totalEp": 40,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/1c/de/23/1cde2391398b3908a8aa65ff7028699c.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 35,
+                        "title": "A Love So Beautiful (2017)",
+                        "genre": "Romance, Youth, School, Coming-of-Age, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 23,
+                        "totalEp": 23,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/2a/c8/45/2ac845a351c7d39a2235a5cfad301602.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 36,
+                        "title": "Put Your Head on My Shoulder (2019)",
+                        "genre": "Romance, Youth, College, Comedy, Slice of Life, Drama",
+                        "status": "Completed",
+                        "currentEp": 24,
+                        "totalEp": 24,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/45/d5/12/45d512df5efb59565cb8309b4f332637.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 37,
+                        "title": "Unforgettable Love (2021)",
+                        "genre": "Romance, Comedy, Family, Drama",
+                        "status": "Completed",
+                        "currentEp": 24,
+                        "totalEp": 24,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/de/9a/17/de9a1776d16f3aa003fbbd4853da3d87.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 38,
+                        "title": "You Are My Glory (2021)",
+                        "genre": "Romance, Workplace, Slice of Life, Drama",
+                        "status": "Completed",
+                        "currentEp": 32,
+                        "totalEp": 32,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/11/4b/d5/114bd52536958fd824a2cc14f0302f76.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 39,
+                        "title": "Falling Into Your Smile (2021)",
+                        "genre": "Romance, Esports, Youth, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 31,
+                        "totalEp": 31,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/50/97/fe/5097fe43541fb0a65d6d7a600e10bc91.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 40,
+                        "title": "Love O2O (2016)",
+                        "genre": "Romance, Youth, College, Gaming, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 30,
+                        "totalEp": 30,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/f3/fa/ce/f3faceefcbb181c97084509e8683e773.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 41,
+                        "title": "You Are My Hero (2021)",
+                        "genre": "Romance, Medical, Military, Action, Drama",
+                        "status": "Completed",
+                        "currentEp": 40,
+                        "totalEp": 40,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/04/95/1f/04951f25cf321a5a5c73f4364c2a5e32.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 42,
+                        "title": "Perfect and Casual (2020)",
+                        "genre": "Romance, Contract Relationship, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 24,
+                        "totalEp": 24,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/22/30/fb/2230fbe10045baed5814a5ba6d7c3e00.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 43,
+                        "title": "The Oath of Love (2022)",
+                        "genre": "Romance, Medical, Family, Drama",
+                        "status": "Completed",
+                        "currentEp": 29,
+                        "totalEp": 29,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/10/50/73/10507396491a00c7385110b622d17c55.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 44,
+                        "title": "Love Like the Galaxy (2022)",
+                        "genre": "Romance, Historical, Family, Political, Drama",
+                        "status": "Completed",
+                        "currentEp": 56,
+                        "totalEp": 56,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/a8/9b/b6/a89bb6daa1db867c1ec6705c80387c2b.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 45,
+                        "title": "Who Rules the World (2022)",
+                        "genre": "Romance, Wuxia, Historical, Political, Adventure, Drama",
+                        "status": "Completed",
+                        "currentEp": 40,
+                        "totalEp": 40,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/aa/d8/a8/aad8a8e5b336ba32166885df2c4df671.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 46,
+                        "title": "The Long Ballad (2021)",
+                        "genre": "Romance, Historical, Political, Action, Drama",
+                        "status": "Completed",
+                        "currentEp": 49,
+                        "totalEp": 49,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/53/d4/13/53d413aa63c06c2f7f947b294a2cb182.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 47,
+                        "title": "Rebirth for You (2021)",
+                        "genre": "Romance, Historical, Costume, Political, Drama",
+                        "status": "Completed",
+                        "currentEp": 40,
+                        "totalEp": 40,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/ab/54/6e/ab546eb9cb2da3257f450226aa3186a5.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 48,
+                        "title": "Princess Agents (2017)",
+                        "genre": "Romance, Historical, Wuxia, Action, Political, Drama",
+                        "status": "Completed",
+                        "currentEp": 67,
+                        "totalEp": 67,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/48/ff/40/48ff4037ac6d41661b2c9cafd81d0b18.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 49,
+                        "title": "The Legend of Shen Li (2024)",
+                        "genre": "Xianxia, Romance, Fantasy, Adventure, Drama",
+                        "status": "Completed",
+                        "currentEp": 39,
+                        "totalEp": 39,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/5c/f9/7b/5cf97b3d092771eba957ed01f0128ab2.jpg",
+                        "streamUrl": "https://wetv.vip/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 50,
+                        "title": "Eternal Love (2017)",
+                        "genre": "Romance, Xianxia, Fantasy, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 58,
+                        "totalEp": 58,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/4f/5f/a7/4f5fa7b79b1f3011b0e5651eab18dd50.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 51,
+                        "title": "Ashes of Love (2018)",
+                        "genre": "Romance, Xianxia, Fantasy, Historical, Adventure, Drama",
+                        "status": "Completed",
+                        "currentEp": 63,
+                        "totalEp": 63,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/03/77/eb/0377ebc0384147d771ac9388aceb8784.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 52,
+                        "title": "Love and Redemption (2020)",
+                        "genre": "Romance, Xianxia, Fantasy, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 59,
+                        "totalEp": 59,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/a0/1d/11/a01d11f2af5a09e7f51eab17669eef3f.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 53,
+                        "title": "Ancient Love Poetry (2021)",
+                        "genre": "Romance, Xianxia, Fantasy, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 49,
+                        "totalEp": 49,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/59/f9/d9/59f9d9f262b42fd6d50f20daaabc694c.jpg",
+                        "streamUrl": "https://wetv.vip/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 54,
+                        "title": "The Last Immortal (2023)",
+                        "genre": "Romance, Xianxia, Fantasy, Adventure, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 40,
+                        "totalEp": 40,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/85/e4/7e/85e47e00b612210d29ea316b29b27bd3.jpg",
+                        "streamUrl": "https://wetv.vip/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 55,
+                        "title": "Immortal Samsara (2022)",
+                        "genre": "Romance, Xianxia, Fantasy, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 38,
+                        "totalEp": 38,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/fa/58/89/fa5889f098bd9b23a2ee301a0fe1c4eb.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 56,
+                        "title": "Beauty of Resilience (2023)",
+                        "genre": "Romance, Xianxia, Fantasy, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 36,
+                        "totalEp": 36,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/74/f1/30/74f130a0729c2cba0769927d8174203e.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 57,
+                        "title": "Till the End of the Moon (2023)",
+                        "genre": "Romance, Xianxia, Fantasy, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 40,
+                        "totalEp": 40,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/a9/68/43/a968433176d9e304faa5cec73193dde5.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 58,
+                        "title": "Love of a Thousand Years (2020)",
+                        "genre": "Romance, Fantasy, Historical, Xianxia, Drama",
+                        "status": "Completed",
+                        "currentEp": 30,
+                        "totalEp": 30,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/0c/a8/31/0ca83171ea20d739f1a3987746089f96.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 59,
+                        "title": "The Legends (2019)",
+                        "genre": "Romance, Fantasy, Wuxia, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 55,
+                        "totalEp": 55,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/e8/3e/f6/e83ef6470d45056e80f1df4ead088573.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 60,
+                        "title": "Legend of Yunxi (2018)",
+                        "genre": "Romance, Historical, Costume, Political, Drama",
+                        "status": "Completed",
+                        "currentEp": 48,
+                        "totalEp": 48,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/66/fa/c4/66fac49c56a6b7165456c00497bea1dc.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 61,
+                        "title": "The Blooms at Ruyi Pavilion (2020)",
+                        "genre": "Romance, Historical, Costume, Drama",
+                        "status": "Completed",
+                        "currentEp": 40,
+                        "totalEp": 40,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/8e/f1/40/8ef14041820d88166cc4fc7ddfd4221d.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 62,
+                        "title": "Romance of Tiger and Rose (2020)",
+                        "genre": "Romance, Comedy, Fantasy, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 24,
+                        "totalEp": 24,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/8b/5a/32/8b5a324a1dae33da61886e8f44e54008.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 63,
+                        "title": "Love Better Than Immortality (2019)",
+                        "genre": "Romance, Fantasy, Historical, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 40,
+                        "totalEp": 40,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/5a/6c/72/5a6c728eda3bf25081cea0725c4ddc9b.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 64,
+                        "title": "Under the Power (2019)",
+                        "genre": "Romance, Historical, Mystery, Wuxia, Drama",
+                        "status": "Completed",
+                        "currentEp": 55,
+                        "totalEp": 55,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/a8/69/20/a86920a0ecf4978b44e41301c54a9500.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 65,
+                        "title": "Teach You a Lesson (2026)",
+                        "genre": "Action, School, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 10,
+                        "totalEp": 10,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/ca/51/df/ca51dff1f0e75a275162132eccbfe35d.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 66,
+                        "title": "Perfect Marriage Revenge (2023)",
+                        "genre": "Romance, Revenge, Melodrama, Drama",
+                        "status": "Completed",
+                        "currentEp": 12,
+                        "totalEp": 12,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/b9/d9/45/b9d945bac53caa902b124102274e56b5.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 67,
+                        "title": "Boyfriend on Demand (2026)",
+                        "genre": "Romance, Romantic Comedy, Fantasy",
+                        "status": "Completed",
+                        "currentEp": 10,
+                        "totalEp": 10,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/15/3b/8e/153b8e55a85a7324bd1bbe88b68a7287.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 68,
+                        "title": "Genie, Make a Wish (2025)",
+                        "genre": "Fantasy, Romance, Romantic Comedy",
+                        "status": "Completed",
+                        "currentEp": 13,
+                        "totalEp": 13,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/75/66/ee/7566ee1b4f6aea693697a9d8567e61c0.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 69,
+                        "title": "I'm Not a Robot (2017)",
+                        "genre": "Romance, Science Fiction, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 32,
+                        "totalEp": 32,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/6e/d2/8a/6ed28a7b1c81b29e054bb0d259c44c6d.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 70,
+                        "title": "Nightmare Teacher (2016)",
+                        "genre": "School, Mystery, Fantasy, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 12,
+                        "totalEp": 12,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/09/fe/0f/09fe0fe3b242330ad762d10e16bf3afd.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 71,
+                        "title": "Bring It On, Ghost (2016)",
+                        "genre": "Romance, Fantasy, Supernatural, Comedy, Horror, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/9f/7e/55/9f7e5514517d21b643cae6fe0754a22e.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 72,
+                        "title": "While You Were Sleeping (2017)",
+                        "genre": "Romance, Fantasy, Mystery, Legal, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 32,
+                        "totalEp": 32,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/0f/ec/ca/0fecca1a6cff425ba385ae98bac3e125.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 73,
+                        "title": "The Tale of Nokdu (2019)",
+                        "genre": "Historical, Romance, Comedy, Youth, Drama",
+                        "status": "Completed",
+                        "currentEp": 32,
+                        "totalEp": 32,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/6d/f4/48/6df448d3a337923f8ee3ae4d0d03746e.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 74,
+                        "title": "Radio Romance (2018)",
+                        "genre": "Romance, Workplace, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/04/d1/f1/04d1f1e6fcd26717f784ceb27be5d340.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": ""
+            },
+            {
+                        "id": 75,
+                        "title": "All of Us Are Dead (2022)",
+                        "genre": "Action, Thriller, Horror, Zombie, School, Drama",
+                        "status": "Completed",
+                        "currentEp": 12,
+                        "totalEp": 12,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/9c/e5/f1/9ce5f14a787b9222af0dc4c14649305e.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": "Nam On-jo, Lee Cheong-san, Choi Nam-ra, Lee Su-hyeok, Yoon Gwi-nam"
+            },
+            {
+                        "id": 76,
+                        "title": "Duty After School (2023)",
+                        "genre": "Action, Military, Sci-Fi, School, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 10,
+                        "totalEp": 10,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/26/d3/06/26d306297e94bde02b8cc866bfcb6a64.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Lee Chun-ho, Kim Chi-yeol, Park Eun-young, Kim Won-bin, Kwon Il-ha"
+            },
+            {
+                        "id": 77,
+                        "title": "Eve (2022)",
+                        "genre": "Romance, Revenge, Melodrama, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/94/52/01/9452016d27b6d98b4ab10ec8972a80b6.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Lee Ra-el, Kang Yoon-gyeom, Seo Eun-pyung, Han So-ra"
+            },
+            {
+                        "id": 78,
+                        "title": "Revenge of Others (2022)",
+                        "genre": "Action, Mystery, Thriller, School, Youth, Drama",
+                        "status": "Completed",
+                        "currentEp": 12,
+                        "totalEp": 12,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/bb/c9/c6/bbc9c63d5124ba36e968df08b2038f12.jpg",
+                        "streamUrl": "https://www.disneyplus.com/",
+                        "mainCharacters": "Ok Chan-mi, Ji Soo-heon, Seok Jae-beom, Gi Oh-sung"
+            },
+            {
+                        "id": 79,
+                        "title": "Vagabond (2019)",
+                        "genre": "Action, Thriller, Mystery, Crime, Political, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/6f/42/14/6f4214fd96d1689662c977d387fba14b.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": "Cha Dal-geon, Go Hae-ri, Ki Tae-woong"
+            },
+            {
+                        "id": 80,
+                        "title": "Marry My Husband (2024)",
+                        "genre": "Romance, Fantasy, Revenge, Time Travel, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/70/e5/15/70e515542dca5f7c17f51070a884e829.jpg",
+                        "streamUrl": "https://www.primevideo.com/",
+                        "mainCharacters": "Kang Ji-won, Yoo Ji-hyuk, Park Min-hwan, Jung Soo-min"
+            },
+            {
+                        "id": 81,
+                        "title": "If Wishes Could Kill (2026)",
+                        "genre": "Horror, Supernatural, Mystery, Youth, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 8,
+                        "totalEp": 8,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/a0/e4/80/a0e480ca9cdce2f5ee388621658c1675.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": "Yoo Se-ah, Lim Na-ri, Kim Geon-woo, Kang Ha-joon, Choi Hyeong-wook"
+            },
+            {
+                        "id": 82,
+                        "title": "A Shop for Killers (2024)",
+                        "genre": "Action, Mystery, Crime, Thriller, Drama",
+                        "status": "Completed",
+                        "currentEp": 8,
+                        "totalEp": 8,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/d7/ca/21/d7ca212b44c69bd630ef1cbd6ccb8276.jpg",
+                        "streamUrl": "https://www.disneyplus.com/",
+                        "mainCharacters": "Jeong Ji-an, Jeong Jin-man, Bale, Brother"
+            },
+            {
+                        "id": 83,
+                        "title": "Night Has Come (2023)",
+                        "genre": "Mystery, Thriller, School, Psychological, Drama",
+                        "status": "Completed",
+                        "currentEp": 12,
+                        "totalEp": 12,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/f2/08/b2/f208b2d5e4704d45899f2b7af008e925.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Lee Yoon-seo, Kim Jun-hee, Oh Jung-won, Cha Woo-min"
+            },
+            {
+                        "id": 84,
+                        "title": "The Uncanny Counter (2020)",
+                        "genre": "Action, Fantasy, Mystery, Supernatural, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 16,
+                        "totalEp": 16,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/fc/d8/ab/fcd8abef08009700ee4755833f406d94.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": "So Mun, Ga Mo-tak, Do Ha-na, Chu Mae-ok, Choi Jang-mul"
+            },
+            {
+                        "id": 85,
+                        "title": "Pyramid Game (2024)",
+                        "genre": "Psychological, Thriller, School, Youth, Drama",
+                        "status": "Completed",
+                        "currentEp": 10,
+                        "totalEp": 10,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/fa/65/5d/fa655df9ed82289f204f18e5c8b8bb80.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Sung Su-ji, Baek Ha-rin, Myung Ja-eun, Seo Do-ah"
+            },
+            {
+                        "id": 86,
+                        "title": "Oh! My Emperor (Season 1) (2018)",
+                        "genre": "Historical, Romance, Fantasy, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 21,
+                        "totalEp": 21,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/91/24/24/91242466031470b7cd481c3f951713ed.jpg",
+                        "streamUrl": "https://wetv.vip/",
+                        "mainCharacters": "Luo Fei-fei, Bei Tang Yi, Bei Tang Mo-ran"
+            },
+            {
+                        "id": 87,
+                        "title": "Oh! My Emperor (Season 2) (2018)",
+                        "genre": "Historical, Romance, Fantasy, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 21,
+                        "totalEp": 21,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/91/24/24/91242466031470b7cd481c3f951713ed.jpg",
+                        "streamUrl": "https://wetv.vip/",
+                        "mainCharacters": "Luo Fei-fei, Bei Tang Yi, Bei Tang Mo-ran"
+            },
+            {
+                        "id": 88,
+                        "title": "I Hear You (2019)",
+                        "genre": "Romance, Youth, Music, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 24,
+                        "totalEp": 24,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/2c/94/5c/2c945c115f3b6cbd565c7b2ddcfd14c3.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": "Bei Er Duo, Ye Shu Wei, Yu Sheng, Tang Li"
+            },
+            {
+                        "id": 89,
+                        "title": "Love's Ambition (2025)",
+                        "genre": "Romance, Workplace, Family, Business, Drama",
+                        "status": "Completed",
+                        "currentEp": 32,
+                        "totalEp": 32,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/f2/b4/74/f2b474e9bfd954a2ac09353a9c2833cf.jpg",
+                        "streamUrl": "https://www.viu.com/",
+                        "mainCharacters": "Xu Yan (Zhao Lusi), Shen Haoming (William Chan), Qiao Lin (Wan Peng), Yu Yiming (Tang Xiaotian)"
+            },
+            {
+                        "id": 90,
+                        "title": "The Legend of Zu Season 2 (2018)",
+                        "genre": "Xianxia, Fantasy, Romance, Wuxia, Drama",
+                        "status": "Completed",
+                        "currentEp": 48,
+                        "totalEp": 48,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/d6/18/a7/d618a791f8a14e0a7410a2db847c743f.jpg",
+                        "streamUrl": "https://wetv.vip/",
+                        "mainCharacters": "Yu Ying Nan (Zhao Liying), Ding Yin (William Chan), Yu Wuxin (Chen Zheyuan), Zhuge Ziyi (Liu Xueyi)"
+            },
+            {
+                        "id": 91,
+                        "title": "In a Class of Her Own (2020)",
+                        "genre": "Historical, Romance, Youth, School, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 36,
+                        "totalEp": 36,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/e0/9b/72/e09b724a49fc6223f51c25982aecf833.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Xue Wen Xi (Ju Jingyi), Feng Cheng Jun (Song Weilong), Lei Ze Xin (Bi Wenjun), Yu Le Xuan (Wang Rui Chang)"
+            },
+            {
+                        "id": 92,
+                        "title": "Love Under the Full Moon (2021)",
+                        "genre": "Romance, Fantasy, Time Travel, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 24,
+                        "totalEp": 24,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/69/6f/dd/696fdd9de8b5c5d65712865df57bbc94.jpg",
+                        "streamUrl": "https://www.iq.com/",
+                        "mainCharacters": "Lei Chu Xia (Ju Jingyi), Xu Xiao Dong (Zheng Yecheng), Zhuo Guan Yue (Mi Re), Xia Luo (Sun Zhen Ni)"
+            },
+            {
+                        "id": 93,
+                        "title": "Veil of Shadows (2026)",
+                        "genre": "Romance, Wuxia, Fantasy, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 29,
+                        "totalEp": 29,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/ba/ba/c9/babac9bba30ef5ef13c79fa3c4ea1ce4.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": "Lu Wuyi (Di Zhu) (Ju Jingyi), Wu Shiguang (Cang Hao) (Joseph Zeng), Wu Wangyan (Qingyi) (Chen Duling), Ji Ling (Man Man) (Tian Jiarui), Li Jie (Yuan Wudi) (Yan An)"
+            },
+            {
+                        "id": 94,
+                        "title": "Hot Girl (2016)",
+                        "genre": "Romance, Action, Youth, Crime, Drama",
+                        "status": "Completed",
+                        "currentEp": 36,
+                        "totalEp": 36,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/5e/7b/43/5e7b4353f96f78a8dc76abfd55a40fff.jpg",
+                        "streamUrl": "https://www.iq.com/",
+                        "mainCharacters": "Guan Xiao Di (Dilraba Dilmurat), Liang Da Wei (Ma Ke), Cui Tian Qi (Wang Yang), Yin Jian Feng (Wang Yu)"
+            },
+            {
+                        "id": 95,
+                        "title": "Our Glamorous Time (2018)",
+                        "genre": "Romance, Workplace, Business, Drama",
+                        "status": "Completed",
+                        "currentEp": 50,
+                        "totalEp": 50,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/e9/0c/fb/e90cfb54ded161437d94416368863500.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Lin Qian (Zhao Liying), Li Zhicheng (Jin Han), Ning Weikai (Johnny Zhang), Grace (Cao Xi Wen)"
+            },
+            {
+                        "id": 96,
+                        "title": "The Journey of Flower (2015)",
+                        "genre": "Romance, Xianxia, Fantasy, Historical, Drama",
+                        "status": "Completed",
+                        "currentEp": 58,
+                        "totalEp": 58,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/10/0d/41/100d415e5be5c8e99057cb9ec3f3c7d4.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Hua Qian Gu (Zhao Liying), Bai Zi Hua (Wallace Huo), Dong Fang Yu Qing (Zhang Danfeng), Sha Qian Mo (Ma Ke)"
+            },
+            {
+                        "id": 97,
+                        "title": "Boss & Me (2014)",
+                        "genre": "Romance, Workplace, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 33,
+                        "totalEp": 33,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/d1/6b/4c/d16b4c5472ddd0a8c06a38313c6294d6.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Xue Shan Shan (Zhao Liying), Feng Teng (Zhang Han), Zheng Qi (Huang Youming), Yuan Li Shu (Li Chengyuan)"
+            },
+            {
+                        "id": 98,
+                        "title": "Go Go Squid! (2019)",
+                        "genre": "Romance, Esports, Youth, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 41,
+                        "totalEp": 41,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/1200x/bb/79/4e/bb794ef6f1b5b264227bfc21d109eba4.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": "Tong Nian (Yang Zi), Han Shang Yan (Li Xian), Wu Bai (Hu Yi Tian), Ai Qing (Li Hongqi)"
+            },
+            {
+                        "id": 99,
+                        "title": "A River Runs Through It (2021)",
+                        "genre": "Romance, Youth, School, Coming-of-Age, Drama",
+                        "status": "Completed",
+                        "currentEp": 36,
+                        "totalEp": 36,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/cf/9b/e6/cf9be682bbe1bd184a9d9bce669d2905.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Xia Xiao Ju (Hu Yi Xuan), Cheng Lang (Wang Rui Chang), Lu Shi Yi (Ye Lin), Qiu Yue (Chen Bo Hao)"
+            },
+            {
+                        "id": 100,
+                        "title": "The Sleepless Princess (2020)",
+                        "genre": "Historical, Romance, Fantasy, Comedy, Drama",
+                        "status": "Completed",
+                        "currentEp": 35,
+                        "totalEp": 35,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/5c/a8/1f/5ca81f52a2649f69ef702b28b8f56d19.jpg",
+                        "streamUrl": "https://www.viki.com/",
+                        "mainCharacters": "Luo Wei Mian (Hu Yi Xuan), Xue Yao (Zheng Yecheng), Qin Ge (Lin Xin Yi), Chu Yue (Huang Can Can)"
+            },
+            {
+                        "id": 101,
+                        "title": "The Story of Pearl Girl (2024)",
+                        "genre": "Historical, Romance, Business, Adventure, Drama",
+                        "status": "Completed",
+                        "currentEp": 40,
+                        "totalEp": 40,
+                        "rating": "10",
+                        "imgUrl": "https://i.pinimg.com/736x/84/a2/fd/84a2fdf4f26f6c3a92b4fdedb5904962.jpg",
+                        "streamUrl": "https://www.netflix.com/",
+                        "mainCharacters": "Duan Wu (Zhao Lusi), Yan Zi Jing (Liu Yuning), Zhang Jin Ran (Tang Xiao Tian), Cui Shi Jiu (Shang Xin Yue)"
+            }
+];
 
-        // FORCE REFRESH INTERCEPT SWITCH
-        let dramas = [...PUBLIC_SHOWCASE_DRAMAS];
-        localStorage.setItem('dramaData', JSON.stringify(dramas));
+        // Core App Logic
+        const STORAGE_KEY = 'dramaData_v4_public_list';
+        let dramas = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!dramas || dramas.length === 0) {
+            dramas = [...PUBLIC_SHOWCASE_DRAMAS];
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dramas));
+        }
 
         function saveToStorage() {
-            localStorage.setItem('dramaData', JSON.stringify(dramas));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dramas));
             renderDashboard();
         }
 
@@ -217,7 +1405,7 @@
         }
 
         function downloadBackup() {
-            if (dramas.length === 0) return alert("Dashboard is empty.");
+            if (dramas.length === 0) return alert("Your tracking dashboard is empty.");
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dramas, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
@@ -237,9 +1425,9 @@
                     if (Array.isArray(importedData)) {
                         dramas = importedData;
                         saveToStorage();
-                        alert("Database restored!");
+                        alert("Database restored successfully!");
                     }
-                } catch (err) { alert("Error reading system file."); }
+                } catch (err) { alert("Error parsing system files."); }
             };
             reader.readAsText(file);
         }
@@ -282,7 +1470,10 @@
 
         function toggleEdit(id) {
             const item = dramas.find(d => d.id === id);
-            if (item) { item.isEditing = !item.isEditing; renderDashboard(); }
+            if (item) {
+                item.isEditing = !item.isEditing;
+                renderDashboard();
+            }
         }
 
         function saveInlineEdit(id) {
@@ -296,94 +1487,194 @@
                 item.rating = document.getElementById(`edit-rating-${id}`).value;
                 item.imgUrl = document.getElementById(`edit-img-${id}`).value;
                 item.streamUrl = document.getElementById(`edit-stream-${id}`).value;
-                if (item.currentEp >= item.totalEp && item.status !== "Dropped") item.status = "Completed";
+
+                if (item.currentEp >= item.totalEp && item.status !== "Dropped") {
+                    item.status = "Completed";
+                }
+
                 item.isEditing = false;
                 saveToStorage();
             }
         }
 
         function deleteDrama(id) {
+            const item = dramas.find(d => d.id === id);
+            const title = item ? item.title : "this drama";
+            if (!confirm(`Delete "${title}" from your watchlist?`)) return;
             dramas = dramas.filter(d => d.id !== id);
             saveToStorage();
         }
 
+        function getProgress(item) {
+            const total = Math.max(1, Number(item.totalEp) || 1);
+            const current = Math.max(0, Math.min(total, Number(item.currentEp) || 0));
+            return Math.round((current / total) * 100);
+        }
+
+        
+
+        function getYear(item) {
+            const match = String(item.title || '').match(/\((\d{4})\)/);
+            return match ? Number(match[1]) : 9999;
+        }
+function normalizeUiText() {
+            const themeButtons = document.querySelectorAll('button[onclick^="setTheme"]');
+            if (themeButtons[0]) themeButtons[0].textContent = 'Night';
+            if (themeButtons[1]) themeButtons[1].textContent = 'Pastel';
+            if (themeButtons[2]) themeButtons[2].textContent = 'Cyber';
+
+            const statusLabels = { 'Watching': 'Currently Watching', 'Plan to Watch': 'Plan to Watch', 'Completed': 'Completed', 'Dropped': 'Dropped' };
+            document.querySelectorAll('#status option').forEach(option => option.textContent = statusLabels[option.value] || option.textContent);
+
+            const ratingLabels = { '10': '10/10 Masterpiece', '9': '9/10 Amazing', '8': '8/10 Really Good', '7': '7/10 Good', '6': '6/10 Okay', '5': '5/10 Bad' };
+            document.querySelectorAll('#rating option').forEach(option => option.textContent = ratingLabels[option.value] || option.textContent);
+        }
+
         function renderDashboard() {
             const grid = document.getElementById('watchlist-grid');
+            const searchText = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+            const statusFilter = document.getElementById('status-filter')?.value || 'All';
+            const sortBy = document.getElementById('sort-filter')?.value || 'year-oldest';
             grid.innerHTML = '';
 
-            const sortedDramas = [...dramas].sort((a, b) => {
-                const weights = { "Watching": 1, "Plan to Watch": 2, "Completed": 3, "Dropped": 4 };
-                return weights[a.status] - weights[b.status];
-            });
+            const sortedDramas = [...dramas]
+                .filter(item => {
+                    const searchableText = `${item.title} ${item.genre} ${item.mainCharacters || ''}`.toLowerCase();
+                    const matchesSearch = !searchText || searchableText.includes(searchText);
+                    const matchesStatus = statusFilter === 'All' || item.status === statusFilter;
+                    return matchesSearch && matchesStatus;
+                })
+                .sort((a, b) => {
+                    const weights = { "Watching": 1, "Plan to Watch": 2, "Completed": 3, "Dropped": 4 };
+                    if (sortBy === 'year-oldest') return getYear(a) - getYear(b) || a.title.localeCompare(b.title);
+                    if (sortBy === 'year-newest') return getYear(b) - getYear(a) || a.title.localeCompare(b.title);
+                    if (sortBy === 'title') return a.title.localeCompare(b.title);
+                    if (sortBy === 'rating') return Number(b.rating) - Number(a.rating) || a.title.localeCompare(b.title);
+                    if (sortBy === 'progress') return getProgress(b) - getProgress(a) || a.title.localeCompare(b.title);
+                    return (weights[a.status] || 99) - (weights[b.status] || 99) || a.title.localeCompare(b.title);
+                });
 
             document.getElementById('stat-total').innerText = dramas.length;
             document.getElementById('stat-watching').innerText = dramas.filter(d => d.status === 'Watching').length;
             document.getElementById('stat-masterpieces').innerText = dramas.filter(d => d.rating === '10').length;
             document.getElementById('stat-episodes').innerText = dramas.reduce((acc, curr) => acc + curr.currentEp, 0);
 
+            const resultCount = document.getElementById('result-count');
+            if (resultCount) {
+                resultCount.innerText = sortedDramas.length === dramas.length
+                    ? 'Showing every saved series'
+                    : `Showing ${sortedDramas.length} of ${dramas.length} saved series`;
+            }
+
+            if(sortedDramas.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 opacity-50 text-sm">No dramas match your current search or filter.</div>`;
+                lucide.createIcons();
+                return;
+            }
+
             sortedDramas.forEach(item => {
+                const progress = getProgress(item);
                 let badgeColor = 'bg-gray-500/20 text-gray-400 border border-gray-500/30';
                 if (item.status === 'Watching') badgeColor = 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
                 else if (item.status === 'Completed') badgeColor = 'bg-green-500/20 text-green-400 border border-green-500/30';
                 else if (item.status === 'Plan to Watch') badgeColor = 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
+                else if (item.status === 'Dropped') badgeColor = 'bg-rose-500/20 text-rose-400 border border-rose-500/30';
 
                 const card = document.createElement('div');
-                card.className = "bg-[var(--card)] rounded-2xl border border-gray-700/40 p-5 flex flex-col justify-between relative group hover:border-indigo-500/40 transition";
+                card.className = "bg-[var(--card)] rounded-2xl border border-gray-700/40 p-5 flex flex-col justify-between shadow-md relative group hover:border-indigo-500/40 transition";
 
                 if (item.isEditing) {
                     card.innerHTML = `
                         <div class="space-y-3">
-                            <input type="text" id="edit-title-${item.id}" value="${item.title}" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-white">
-                            <input type="text" id="edit-genre-${item.id}" value="${item.genre}" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-white">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-400">Editing Card Details</h4>
+                            <input type="text" id="edit-title-${item.id}" value="${item.title}" placeholder="Title" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-white">
+                            <input type="text" id="edit-genre-${item.id}" value="${item.genre}" placeholder="Genres" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-white">
+                            
                             <div class="grid grid-cols-2 gap-2">
-                                <select id="edit-status-${item.id}" class="w-full bg-gray-800 border border-gray-700 p-2 rounded-xl text-xs text-white">
-                                    <option value="Watching" ${item.status === 'Watching' ? 'selected' : ''}>Watching</option>
-                                    <option value="Completed" ${item.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                                </select>
-                                <select id="edit-rating-${item.id}" class="w-full bg-gray-800 border border-gray-700 p-2 rounded-xl text-xs text-white">
-                                    <option value="10" ${item.rating === '10' ? 'selected' : ''}>10/10</option>
-                                </select>
+                                <div>
+                                    <label class="text-[10px] opacity-60">Status</label>
+                                    <select id="edit-status-${item.id}" class="w-full bg-gray-800 border border-gray-700 p-2 rounded-xl text-xs text-white">
+                                        <option value="Watching" ${item.status === 'Watching' ? 'selected' : ''}>Watching</option>
+                                        <option value="Plan to Watch" ${item.status === 'Plan to Watch' ? 'selected' : ''}>Plan to Watch</option>
+                                        <option value="Completed" ${item.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                        <option value="Dropped" ${item.status === 'Dropped' ? 'selected' : ''}>Dropped</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-[10px] opacity-60">Score Rating</label>
+                                    <select id="edit-rating-${item.id}" class="w-full bg-gray-800 border border-gray-700 p-2 rounded-xl text-xs text-white">
+                                        <option value="10" ${item.rating === '10' ? 'selected' : ''}>10/10</option>
+                                        <option value="9" ${item.rating === '9' ? 'selected' : ''}>9/10</option>
+                                        <option value="8" ${item.rating === '8' ? 'selected' : ''}>8/10</option>
+                                        <option value="7" ${item.rating === '7' ? 'selected' : ''}>7/10</option>
+                                        <option value="6" ${item.rating === '6' ? 'selected' : ''}>6/10</option>
+                                        <option value="5" ${item.rating === '5' ? 'selected' : ''}>5/10</option>
+                                    </select>
+                                </div>
                             </div>
+
                             <div class="grid grid-cols-2 gap-2">
-                                <input type="number" id="edit-current-${item.id}" value="${item.currentEp}" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-center text-white">
-                                <input type="number" id="edit-total-${item.id}" value="${item.totalEp}" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-center text-white">
+                                <input type="number" id="edit-current-${item.id}" value="${item.currentEp}" placeholder="Current Ep" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-center text-white">
+                                <input type="number" id="edit-total-${item.id}" value="${item.totalEp}" placeholder="Total Eps" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-sm text-center text-white">
                             </div>
-                            <input type="url" id="edit-img-${item.id}" value="${item.imgUrl}" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-xs text-white">
-                            <input type="url" id="edit-stream-${item.id}" value="${item.streamUrl}" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-xs text-white">
+
+                            <input type="url" id="edit-img-${item.id}" value="${item.imgUrl}" placeholder="Image Poster URL" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-xs text-white">
+                            <input type="url" id="edit-stream-${item.id}" value="${item.streamUrl}" placeholder="Streaming Link URL" class="w-full bg-black/30 border border-gray-700 p-2 rounded-xl text-xs text-white">
+                            
                             <div class="flex gap-2 pt-2">
-                                <button onclick="saveInlineEdit(${item.id})" class="w-1/2 bg-emerald-600 py-2 rounded-xl text-xs font-bold text-white transition cursor-pointer">Save</button>
-                                <button onclick="toggleEdit(${item.id})" class="w-1/2 bg-gray-700 py-2 rounded-xl text-xs font-bold text-white transition cursor-pointer">Cancel</button>
+                                <button onclick="saveInlineEdit(${item.id})" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 py-2 rounded-xl text-xs font-bold text-white transition cursor-pointer">Save Changes</button>
+                                <button onclick="toggleEdit(${item.id})" class="w-1/2 bg-gray-700 hover:bg-gray-600 py-2 rounded-xl text-xs font-bold text-white transition cursor-pointer">Cancel</button>
                             </div>
-                        </div>`;
+                        </div>
+                    `;
                 } else {
-                    const streamBtn = item.streamUrl ? `<a href="${item.streamUrl}" target="_blank" class="flex items-center justify-center gap-1.5 text-xs font-semibold bg-emerald-600 text-white py-1.5 px-3 rounded-lg transition"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Stream</a>` : '';
-                    const imgHeader = item.imgUrl ? `<div class="w-full h-96 bg-black/40 rounded-xl overflow-hidden mb-4 border border-gray-700/20 flex items-center justify-center"><img src="${item.imgUrl}" alt="Poster" referrerpolicy="no-referrer" class="max-w-full max-h-full object-contain"></div>` : `<div class="w-full h-40 bg-gray-800/40 rounded-xl mb-4 border border-dashed border-gray-700 flex flex-col items-center justify-center opacity-40"><i data-lucide="image" class="mb-1 w-5 h-5"></i><span class="text-[10px]">No Poster Link</span></div>`;
+                    const streamBtn = item.streamUrl 
+                        ? `<a href="${item.streamUrl}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white py-1.5 px-3 rounded-lg transition"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Stream</a>` 
+                        : '';
+
+                    const imgHeader = item.imgUrl 
+                        ? `<div class="w-full h-96 bg-black/40 rounded-xl overflow-hidden mb-4 border border-gray-700/20 shadow-inner flex items-center justify-center">
+                             <img src="${item.imgUrl}" alt="${item.title} poster" class="max-w-full max-h-full object-contain">
+                           </div>` 
+                        : `<div class="w-full h-40 bg-gray-800/40 rounded-xl mb-4 border border-dashed border-gray-700 flex flex-col items-center justify-center opacity-40"><i data-lucide="image" class="mb-1 w-5 h-5"></i><span class="text-[10px]">No Poster URL linked. Click Edit.</span></div>`;
 
                     card.innerHTML = `
                         <div>
                             <div class="flex justify-between items-start gap-2 mb-3">
                                 <span class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${badgeColor}">${item.status}</span>
                                 <div class="flex gap-1">
-                                    <button onclick="toggleEdit(${item.id})" class="text-gray-500 hover:text-indigo-400 transition cursor-pointer p-1"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-                                    <button onclick="deleteDrama(${item.id})" class="text-gray-500 hover:text-rose-400 transition cursor-pointer p-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                                    <button onclick="toggleEdit(${item.id})" class="text-gray-500 hover:text-indigo-400 transition cursor-pointer p-1" title="Edit Card"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+                                    <button onclick="deleteDrama(${item.id})" class="text-gray-500 hover:text-rose-400 transition cursor-pointer p-1" title="Delete Card"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
                                 </div>
                             </div>
+                            
                             ${imgHeader}
+
                             <h3 class="text-lg font-bold tracking-tight text-white mb-1 line-clamp-1">${item.title}</h3>
                             <p class="text-xs opacity-60 flex items-center gap-1 mb-4"><i data-lucide="tag" class="w-3 h-3"></i> ${item.genre}</p>
-                            <div class="bg-black/20 p-3 rounded-xl border border-gray-700/10 flex items-center justify-between mb-4">
-                                <span class="text-xs opacity-70 font-medium">Binge Timeline:</span>
-                                <div class="flex items-center gap-3">
-                                    <button onclick="adjustEpisode(${item.id}, -1)" class="w-7 h-7 bg-gray-800 text-white rounded-lg flex items-center justify-center font-bold text-sm">-</button>
-                                    <span class="font-mono font-bold text-sm text-indigo-300">${item.currentEp} / ${item.totalEp}</span>
-                                    <button onclick="adjustEpisode(${item.id}, 1)" class="w-7 h-7 bg-gray-800 text-white rounded-lg flex items-center justify-center font-bold text-sm">+</button>
+                            
+                            <div class="bg-black/20 p-3 rounded-xl border border-gray-700/10 mb-4">
+                                <div class="flex items-center justify-between gap-3 mb-3">
+                                    <span class="text-xs opacity-70 font-medium">Binge Timeline:</span>
+                                    <div class="flex items-center gap-3">
+                                        <button onclick="adjustEpisode(${item.id}, -1)" class="w-7 h-7 bg-gray-800 text-white rounded-lg flex items-center justify-center hover:bg-gray-700 font-bold cursor-pointer transition text-sm">-</button>
+                                        <span class="font-mono font-bold text-sm text-indigo-300">${item.currentEp} / ${item.totalEp}</span>
+                                        <button onclick="adjustEpisode(${item.id}, 1)" class="w-7 h-7 bg-gray-800 text-white rounded-lg flex items-center justify-center hover:bg-gray-700 font-bold cursor-pointer transition text-sm">+</button>
+                                    </div>
+                                </div>
+                                <div class="h-2 rounded-full bg-gray-900/60 overflow-hidden">
+                                    <div class="h-full rounded-full bg-indigo-500 transition-all" style="width: ${progress}%"></div>
                                 </div>
                             </div>
                         </div>
+
                         <div class="flex items-center justify-between mt-2 border-t border-gray-700/20 pt-3">
-                            <div class="text-amber-400 text-sm font-bold flex items-center gap-1"><i data-lucide="star" class="w-4 h-4 fill-amber-400"></i> ${item.rating}/10</div>
+                            <div class="text-amber-400 text-sm font-bold flex items-center gap-1">
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i> ${item.rating}/10
+                            </div>
                             ${streamBtn}
-                        </div>`;
+                        </div>
+                    `;
                 }
                 grid.appendChild(card);
             });
@@ -392,6 +1683,7 @@
 
         const activeTheme = localStorage.getItem('appTheme') || 'night';
         setTheme(activeTheme);
+        normalizeUiText();
         renderDashboard();
     </script>
 </body>
